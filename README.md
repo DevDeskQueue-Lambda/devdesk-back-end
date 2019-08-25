@@ -6,7 +6,7 @@
 
 ### How to get your Access Token with React
 
-#### Axios Config File for No Authorization
+#### Axios Config File for Login Endpoint
 
 ```js
 import axios from 'axios';
