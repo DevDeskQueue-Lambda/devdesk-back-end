@@ -1,5 +1,6 @@
 package com.digitalsolutionsbydon.devdesk.controllers;
 
+import com.digitalsolutionsbydon.devdesk.models.ErrorDetail;
 import com.digitalsolutionsbydon.devdesk.models.User;
 import com.digitalsolutionsbydon.devdesk.models.UserRoles;
 import com.digitalsolutionsbydon.devdesk.services.RoleService;
@@ -14,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,14 +32,26 @@ public class OpenController
     @Autowired
     private RoleService roleService;
 
-    @ApiOperation(value = "Adds a new User", notes="Anyone added will be of the default Student Role, need an admin account to upgrade roles", response= User.class)
-    @ApiResponses({@ApiResponse(code=201, message="User successfully created", response=User.class),@ApiResponse(code=500, message="Something went wrong")})
-    @PostMapping(value="/register", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<?> addNewUser(HttpServletRequest request, @Valid @RequestBody User newUser)
+    @ApiOperation(value = "Adds a new User",
+            notes = "Anyone added will be of the default Student Role, need an admin account to upgrade roles",
+            response = User.class)
+    @ApiResponses({@ApiResponse(code = 201,
+            message = "User successfully created",
+            response = User.class), @ApiResponse(code = 400,
+            message = "Bad Request",
+            response = ErrorDetail.class), @ApiResponse(code = 500,
+            message = "Something went wrong")})
+    @PostMapping(value = "/register",
+            consumes = {"application/json"},
+            produces = {"application/json"})
+    public ResponseEntity<?> addNewUser(HttpServletRequest request, @Valid
+    @RequestBody
+            User newUser)
     {
-        logger.info(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
+        logger.info(request.getMethod()
+                           .toUpperCase() + " " + request.getRequestURI() + " accessed");
         ArrayList<UserRoles> newRoles = new ArrayList<>();
-        newRoles.add(new UserRoles(newUser,roleService.findRoleByRoleName("student")));
+        newRoles.add(new UserRoles(newUser, roleService.findRoleByRoleName("student")));
         newUser.setUserRoles(newRoles);
         User user = userService.save(newUser);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
