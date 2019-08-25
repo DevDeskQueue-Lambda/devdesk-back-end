@@ -20,7 +20,7 @@ public class Swagger2Config
     {
         return new Docket(DocumentationType.SWAGGER_2).select()
                                                       //                .apis(RequestHandlerSelectors.any())
-                                                      .apis(RequestHandlerSelectors.basePackage("com.lambdaschool.starthere"))
+                                                      .apis(RequestHandlerSelectors.basePackage("com.digitalsolutionsbydon.devdesk"))
                                                       .paths(PathSelectors.any())
                                                       .build()
                                                       .useDefaultResponseMessages(false) // Allows only my exception responses
@@ -30,11 +30,11 @@ public class Swagger2Config
 
     private ApiInfo apiEndPointsInfo()
     {
-        return new ApiInfoBuilder().title("Java Spring Back End Starting Project")
-                                   .description("A starting application for developing Java Spring Back End Projects")
-                                   .contact(new Contact("John Mitchell", "http://www.lambdaschool.com", "john@lambdaschool.com"))
+        return new ApiInfoBuilder().title("DevDesk Queue Build Week Project")
+                                   .description("DevDesk Backend developed in Java Spring")
+                                   .contact(new Contact("Donald Whitely", "https://www.donwhitely.com", "dswhitely1@gmail.com"))
                                    .license("MIT")
-                                   .licenseUrl("https://github.com/LambdaSchool/java-starthere/blob/master/LICENSE")
+                                   .licenseUrl("https://github.com/DevDeskQueue-Lambda/devdesk-back-end/blob/master/LICENSE")
                                    .version("1.0.0")
                                    .build();
     }
