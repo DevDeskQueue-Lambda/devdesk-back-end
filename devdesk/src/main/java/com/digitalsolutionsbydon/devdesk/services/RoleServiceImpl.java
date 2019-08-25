@@ -4,6 +4,7 @@ package com.digitalsolutionsbydon.devdesk.services;
 import com.digitalsolutionsbydon.devdesk.exceptions.ResourceNotFoundException;
 import com.digitalsolutionsbydon.devdesk.models.Role;
 import com.digitalsolutionsbydon.devdesk.repositories.RoleRepository;
+import com.digitalsolutionsbydon.devdesk.view.RoleIdsAndNames;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,14 @@ public class RoleServiceImpl implements RoleService
 {
     @Autowired
     RoleRepository roleRepo;
+
+    @Override
+    public List<RoleIdsAndNames> findRoleIdsAndNames()
+    {
+        List<RoleIdsAndNames> list = new ArrayList<>();
+        roleRepo.getRoleIdsAndNames().iterator().forEachRemaining(list::add);
+        return list;
+    }
 
     @Override
     public Role findRoleByRoleName(String name)
