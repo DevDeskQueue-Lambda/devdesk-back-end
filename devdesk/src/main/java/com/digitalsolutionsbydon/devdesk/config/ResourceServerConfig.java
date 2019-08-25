@@ -26,7 +26,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter
     {
         // http.anonymous().disable();
         http.authorizeRequests()
-            .antMatchers("/", "/h2-console/**", "/swagger-resources/**", "/swagger-resources/configuration/ui", "/swagger-resources/configuration/security", "/swagger-resource/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**", "/createnewuser", "/otherapis/**")
+            .antMatchers("/", "/h2-console/**", "/swagger-resources/**", "/swagger-resources/configuration/ui", "/swagger-resources/configuration/security", "/swagger-resource/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**", "/register", "/otherapis/**")
             .permitAll()
             .antMatchers("/users/**", "/oauth/revoke-token")
             .authenticated()
