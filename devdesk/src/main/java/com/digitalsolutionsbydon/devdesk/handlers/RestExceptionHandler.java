@@ -1,5 +1,6 @@
 package com.digitalsolutionsbydon.devdesk.handlers;
 
+import com.digitalsolutionsbydon.devdesk.exceptions.BadRequestException;
 import com.digitalsolutionsbydon.devdesk.exceptions.NotAuthorizedException;
 import com.digitalsolutionsbydon.devdesk.exceptions.ResourceNotFoundException;
 import com.digitalsolutionsbydon.devdesk.models.ErrorDetail;
@@ -53,6 +54,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
                                            .getName());
 
         return new ResponseEntity<>(errorDetail, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<?> handleBadRequestException(BadRequestException bae, HttpServletRequest request)
+    {
+        ErrorDetail errorDetail = new ErrorDetail();
+        errorDetail.setTimestamp(new Date().getTime());
+        errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorDetail.setTitle("Success depends upon previous preparation, and without such preparation there is sure to be failure. --Confucius");
+        errorDetail.setDetail(bae.getMessage());
+        errorDetail.setDeveloperMessage(bae.getClass()
+                                           .getName());
+
+        return new ResponseEntity<>(errorDetail, HttpStatus.BAD_REQUEST);
     }
 
     @Override
