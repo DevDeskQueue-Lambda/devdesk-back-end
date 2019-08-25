@@ -20,6 +20,20 @@ public class RoleServiceImpl implements RoleService
     RoleRepository roleRepo;
 
     @Override
+    public Role findRoleByRoleName(String name)
+    {
+        Role rr = roleRepo.findByName(name);
+
+        if (rr != null)
+        {
+            return rr;
+        } else
+        {
+            throw new ResourceNotFoundException(name);
+        }
+    }
+
+    @Override
     public List<Role> findAll()
     {
         List<Role> list = new ArrayList<>();
