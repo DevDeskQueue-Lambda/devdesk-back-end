@@ -35,7 +35,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
         errorDetail.setTitle("Resource Not Found");
         errorDetail.setDetail(rnfe.getMessage());
-        errorDetail.setDeveloperMessage(rnfe.getClass().getName());
+        errorDetail.setDeveloperMessage(rnfe.getClass()
+                                            .getName());
 
         return new ResponseEntity<>(errorDetail, HttpStatus.NOT_FOUND);
     }
@@ -48,7 +49,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         errorDetail.setStatus(HttpStatus.UNAUTHORIZED.value());
         errorDetail.setTitle("YOU SHALL NOT PASS! -- Gandalf The Grey");
         errorDetail.setDetail(nae.getMessage());
-        errorDetail.setDeveloperMessage(nae.getClass().getName());
+        errorDetail.setDeveloperMessage(nae.getClass()
+                                           .getName());
 
         return new ResponseEntity<>(errorDetail, HttpStatus.UNAUTHORIZED);
     }
