@@ -34,7 +34,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
-        errorDetail.setTitle("Resource Not Found");
+        errorDetail.setTitle("Objects in the rear view mirror may appear closer than they are.");
         errorDetail.setDetail(rnfe.getMessage());
         errorDetail.setDeveloperMessage(rnfe.getClass()
                                             .getName());
