@@ -1,11 +1,15 @@
 package com.digitalsolutionsbydon.devdesk.services;
 
+import com.digitalsolutionsbydon.devdesk.controllers.UserController;
+import com.digitalsolutionsbydon.devdesk.exceptions.BadRequestException;
 import com.digitalsolutionsbydon.devdesk.exceptions.NotAuthorizedException;
 import com.digitalsolutionsbydon.devdesk.exceptions.ResourceNotFoundException;
 import com.digitalsolutionsbydon.devdesk.models.User;
 import com.digitalsolutionsbydon.devdesk.models.UserRoles;
 import com.digitalsolutionsbydon.devdesk.repositories.RoleRepository;
 import com.digitalsolutionsbydon.devdesk.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,6 +28,7 @@ import java.util.List;
 @Service(value = "userService")
 public class UserServiceImpl implements UserService, UserDetailsService
 {
+
     @Autowired
     UserRepository userRepo;
 
@@ -76,6 +81,10 @@ public class UserServiceImpl implements UserService, UserDetailsService
     @Override
     public User save(User user)
     {
+        if (userRepo.findByUsername(user.getUsername())!= null)
+        {
+            throw new BadRequestException("Username has already been taken");
+        }
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPasswordNoEncrypt(user.getPassword());
@@ -143,8 +152,7 @@ public class UserServiceImpl implements UserService, UserDetailsService
         }
     }
 
-    @Transactional
-    @Modifying
+
     @Override
     public void deleteUserById(long id)
     {
@@ -154,7 +162,7 @@ public class UserServiceImpl implements UserService, UserDetailsService
             userRepo.deleteById(id);
         } else
         {
-            throw new ResourceNotFoundException("The " + id + " is not in the system.");
+            throw new ResourceNotFoundException("User " + id + " is not in the system.");
         }
     }
 }
