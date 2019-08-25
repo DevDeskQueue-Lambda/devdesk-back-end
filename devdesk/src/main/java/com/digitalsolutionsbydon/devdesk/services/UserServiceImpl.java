@@ -4,6 +4,7 @@ import com.digitalsolutionsbydon.devdesk.controllers.UserController;
 import com.digitalsolutionsbydon.devdesk.exceptions.BadRequestException;
 import com.digitalsolutionsbydon.devdesk.exceptions.NotAuthorizedException;
 import com.digitalsolutionsbydon.devdesk.exceptions.ResourceNotFoundException;
+import com.digitalsolutionsbydon.devdesk.exceptions.ValidationError;
 import com.digitalsolutionsbydon.devdesk.models.User;
 import com.digitalsolutionsbydon.devdesk.models.UserRoles;
 import com.digitalsolutionsbydon.devdesk.repositories.RoleRepository;
@@ -22,7 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service(value = "userService")
@@ -86,11 +89,42 @@ public class UserServiceImpl implements UserService, UserDetailsService
             throw new BadRequestException("Username has already been taken");
         }
         User newUser = new User();
-        newUser.setUsername(user.getUsername());
-        newUser.setPasswordNoEncrypt(user.getPassword());
-        newUser.setFname(user.getFname());
-        newUser.setLname(user.getLname());
-        newUser.setUseremail(user.getUseremail());
+        if (user.getUsername()!=null)
+        {
+            newUser.setUsername(user.getUsername());
+        } else
+        {
+            throw new BadRequestException("The field 'username' cannot be null");
+        }
+        if (user.getPassword()!=null)
+        {
+            newUser.setPasswordNoEncrypt(user.getPassword());
+        } else
+        {
+            throw new BadRequestException("The field 'password' cannot be null.");
+        }
+        if(user.getFname()!= null)
+        {
+            newUser.setFname(user.getFname());
+        } else
+        {
+            throw new BadRequestException("The field 'fname' cannot be null.");
+        }
+        if(user.getLname()!=null)
+        {
+            newUser.setLname(user.getLname());
+        } else
+        {
+            throw new BadRequestException("The field 'lname' cannot be null.");
+        }
+        if(user.getUseremail()!=null)
+        {
+            newUser.setUseremail(user.getUseremail());
+        } else
+        {
+            throw new BadRequestException("The field 'useremail' cannot be null.");
+        }
+
         ArrayList<UserRoles> newRoles = new ArrayList<>();
         for (UserRoles ur : user.getUserRoles())
         {
