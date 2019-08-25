@@ -3,29 +3,34 @@ package com.digitalsolutionsbydon.devdesk.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Objects;
 
-@ApiModel(value="UserRoles", description = "Mapping for Users and Roles")
+@ApiModel(value = "UserRoles",
+        description = "Mapping for Users and Roles")
 @Entity
-@Table(name="userroles")
-public class UserRoles extends Auditable
+@Table(name = "userroles")
+public class UserRoles extends Auditable implements Serializable
 {
-    @ApiModelProperty(name="userid", value="ForeignKey for User's Table", required = true, example="1")
+    @ApiModelProperty(name = "userid",
+            value = "ForeignKey for User's Table",
+            required = true,
+            example = "1")
     @Id
     @ManyToOne
-    @JoinColumn(name="userid")
+    @JoinColumn(name = "userid")
     @JsonIgnoreProperties("userRoles")
     private User user;
 
-    @ApiModelProperty(name="roleid", value="ForeignKey for Role's Table", required = true, example="1")
+    @ApiModelProperty(name = "roleid",
+            value = "ForeignKey for Role's Table",
+            required = true,
+            example = "1")
     @Id
     @ManyToOne
-    @JoinColumn(name="roleid")
+    @JoinColumn(name = "roleid")
     @JsonIgnoreProperties("userRoles")
     private Role role;
 

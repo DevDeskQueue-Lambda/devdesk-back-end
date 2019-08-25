@@ -11,6 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +22,24 @@ import java.util.List;
 
 @Transactional
 @Service(value = "userService")
-public class UserServiceImpl implements UserService
+public class UserServiceImpl implements UserService, UserDetailsService
 {
     @Autowired
     UserRepository userRepo;
 
     @Autowired
     RoleRepository roleRepo;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
+    {
+        User user = userRepo.findByUsername(username);
+        if (user == null)
+        {
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthority());
+    }
 
     @Override
     public List<User> findAll(Pageable pageable)

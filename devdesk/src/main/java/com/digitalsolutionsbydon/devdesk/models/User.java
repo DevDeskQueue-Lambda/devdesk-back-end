@@ -43,8 +43,6 @@ public class User extends Auditable
             example = "password")
     @Column(unique = true,
             nullable = false)
-    @Size(min = 5,
-            max = 20)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
