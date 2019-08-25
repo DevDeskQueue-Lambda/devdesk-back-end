@@ -2,7 +2,9 @@ package com.digitalsolutionsbydon.devdesk.controllers;
 
 import com.digitalsolutionsbydon.devdesk.models.ErrorDetail;
 import com.digitalsolutionsbydon.devdesk.models.User;
+import com.digitalsolutionsbydon.devdesk.services.RoleService;
 import com.digitalsolutionsbydon.devdesk.services.UserService;
+import com.digitalsolutionsbydon.devdesk.view.RoleIdsAndNames;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,9 @@ public class UserController
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @Autowired
     UserService userService;
+
+    @Autowired
+    RoleService roleService;
 
     @ApiOperation(value = "Returns all Users",
             response = User.class,
@@ -93,7 +98,8 @@ public class UserController
             message = "User not found",
             response = ErrorDetail.class)})
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @DeleteMapping(value = "/user/{id}", produces = {"application/json"})
+    @DeleteMapping(value = "/user/{id}",
+            produces = {"application/json"})
     public ResponseEntity<?> deleteUserById(HttpServletRequest request,
                                             @ApiParam(value = "User Id",
                                                     required = true,
@@ -124,6 +130,39 @@ public class UserController
     {
         logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
         User updatedUser = userService.update(user, id);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Returns a List of User Roles",
+            response = RoleIdsAndNames.class,
+            responseContainer = "List")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @GetMapping(value = "/roles",
+            produces = {"application/json"})
+    public ResponseEntity<?> listAllRoles(HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        List<RoleIdsAndNames> list = roleService.findRoleIdsAndNames();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Admin can update any profile",
+            response = User.class)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping(value = "/admin/user/{id}",
+            consumes = {"application/json"},
+            produces = {"application/json"})
+    public ResponseEntity<?> adminUpdateUserById(HttpServletRequest request, @Valid
+    @RequestBody
+            User user,
+                                                 @ApiParam(value = "User Id",
+                                                         required = true,
+                                                         example = "1")
+                                                 @PathVariable
+                                                         long id)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        User updatedUser = userService.adminUpdate(user, id);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 }
