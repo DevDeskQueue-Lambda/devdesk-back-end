@@ -1,9 +1,9 @@
 package com.digitalsolutionsbydon.devdesk;
 
-import com.digitalsolutionsbydon.devdesk.models.Role;
-import com.digitalsolutionsbydon.devdesk.models.User;
-import com.digitalsolutionsbydon.devdesk.models.UserRoles;
+import com.digitalsolutionsbydon.devdesk.models.*;
+import com.digitalsolutionsbydon.devdesk.services.CategoryService;
 import com.digitalsolutionsbydon.devdesk.services.RoleService;
+import com.digitalsolutionsbydon.devdesk.services.StatusService;
 import com.digitalsolutionsbydon.devdesk.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -21,6 +21,12 @@ public class SeedData implements CommandLineRunner
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    StatusService statusService;
+
+    @Autowired
+    CategoryService categoryService;
 
     @Override
     public void run(String... args) throws Exception
@@ -50,5 +56,24 @@ public class SeedData implements CommandLineRunner
         userService.save(u1);
         userService.save(u2);
         userService.save(u3);
+
+        Status s1 = new Status("Pending");
+        Status s2 = new Status("Assigned");
+        Status s3 = new Status("Resolved");
+        Status s4 = new Status("Archived");
+        statusService.save(s1);
+        statusService.save(s2);
+        statusService.save(s3);
+        statusService.save(s4);
+
+        Category c1 = new Category("React");
+        Category c2 = new Category("Node.JS");
+        Category c3 = new Category("Java");
+        Category c4 = new Category("JavaScript");
+        categoryService.save(c1);
+        categoryService.save(c2);
+        categoryService.save(c3);
+        categoryService.save(c4);
+
     }
 }
