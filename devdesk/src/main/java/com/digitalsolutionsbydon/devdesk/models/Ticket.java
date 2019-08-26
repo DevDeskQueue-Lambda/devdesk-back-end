@@ -49,20 +49,21 @@ public class Ticket extends Auditable implements Serializable
     @ManyToOne
     @JoinColumn(name="categoryid")
     @JsonIgnoreProperties("ticket")
-    private Category category;
+    private List<Category> category;
 
     public Ticket()
     {
     }
 
-    public Ticket(String title, String description, String tried, User user, Status status, Category category)
+    public Ticket(String title, String description, String tried, User user, Status status, List<Category> category)
     {
         this.title = title;
         this.description = description;
         this.tried = tried;
         this.user = user;
         this.status = status;
-        this.category = category;
+        this.category=category;
+
     }
 
     public long getId()
@@ -135,12 +136,12 @@ public class Ticket extends Auditable implements Serializable
         this.status = status;
     }
 
-    public Category getCategory()
+    public List<Category> getCategory()
     {
         return category;
     }
 
-    public void setCategory(Category category)
+    public void setCategory(List<Category> category)
     {
         this.category = category;
     }
