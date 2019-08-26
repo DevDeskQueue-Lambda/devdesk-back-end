@@ -1,8 +1,9 @@
 package com.digitalsolutionsbydon.devdesk.services;
 
 import com.digitalsolutionsbydon.devdesk.models.Ticket;
+import org.springframework.data.domain.Pageable;
 
-import java.awt.print.Pageable;
+
 import java.util.List;
 
 public interface TicketService
