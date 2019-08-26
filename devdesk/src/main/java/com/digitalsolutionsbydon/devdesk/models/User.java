@@ -80,11 +80,15 @@ public class User extends Auditable
     @JsonIgnoreProperties("user")
     private List<UserRoles> userRoles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade=CascadeType.ALL)
+    @OneToOne(mappedBy="user")
     @JsonIgnoreProperties("user")
-    private List<Ticket> tickets = new ArrayList<>();
+    private Ticket ticket;
 
-    public User()
+    @OneToOne(mappedBy="assigneduser")
+    @JsonIgnoreProperties("assigneduser")
+    private Ticket ticketassigned;
+
+      public User()
     {
     }
 
@@ -182,14 +186,24 @@ public class User extends Auditable
         this.userRoles = userRoles;
     }
 
-    public List<Ticket> getTickets()
+    public Ticket getTicket()
     {
-        return tickets;
+        return ticket;
     }
 
-    public void setTickets(List<Ticket> tickets)
+    public void setTicket(Ticket ticket)
     {
-        this.tickets = tickets;
+        this.ticket = ticket;
+    }
+
+    public Ticket getTicketassigned()
+    {
+        return ticketassigned;
+    }
+
+    public void setTicketassigned(Ticket ticketassigned)
+    {
+        this.ticketassigned = ticketassigned;
     }
 
     public List<SimpleGrantedAuthority> getAuthority()

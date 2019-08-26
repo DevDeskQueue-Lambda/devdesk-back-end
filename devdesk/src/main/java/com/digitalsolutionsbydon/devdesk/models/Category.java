@@ -31,10 +31,9 @@ public class Category extends Auditable implements Serializable
             unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "category",
-            cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL})
     @JsonIgnoreProperties("category")
-    private List<Ticket> ticket = new ArrayList<>();
+    private List<TicketMapper> ticketMappers = new ArrayList<>();
 
     public Category()
     {
@@ -55,16 +54,6 @@ public class Category extends Auditable implements Serializable
         this.categoryid = categoryid;
     }
 
-    public List<Ticket> getTicket()
-    {
-        return ticket;
-    }
-
-    public void setTicket(List<Ticket> ticket)
-    {
-        this.ticket = ticket;
-    }
-
     public String getName()
     {
         return name;
@@ -73,5 +62,15 @@ public class Category extends Auditable implements Serializable
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public List<TicketMapper> getTicketMappers()
+    {
+        return ticketMappers;
+    }
+
+    public void setTicketMappers(List<TicketMapper> ticketMappers)
+    {
+        this.ticketMappers = ticketMappers;
     }
 }

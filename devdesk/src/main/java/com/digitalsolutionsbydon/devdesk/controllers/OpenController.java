@@ -44,9 +44,9 @@ public class OpenController
     @PostMapping(value = "/register",
             consumes = {"application/json"},
             produces = {"application/json"})
-    public ResponseEntity<?> addNewUser(HttpServletRequest request, @Valid
+    public ResponseEntity<?> addNewUser( @Valid
     @RequestBody
-            User newUser)
+            User newUser,HttpServletRequest request)
     {
         logger.info(request.getMethod()
                            .toUpperCase() + " " + request.getRequestURI() + " accessed");

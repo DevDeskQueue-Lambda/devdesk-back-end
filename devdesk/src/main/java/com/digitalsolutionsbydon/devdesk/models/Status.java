@@ -17,15 +17,15 @@ public class Status extends Auditable implements Serializable
     @ApiModelProperty(name="statusid", value="Primary Key for Status", required = true, example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long statusid;
 
     @ApiModelProperty(name="Status Name", value="The Statuses", required = true, example = "Pending")
     @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "status", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy="status", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("status")
-    private List<Ticket> ticket = new ArrayList<>();
+    private Ticket ticket;
 
     public Status()
     {
@@ -36,14 +36,14 @@ public class Status extends Auditable implements Serializable
         this.name = name;
     }
 
-    public long getId()
+    public long getStatusid()
     {
-        return id;
+        return statusid;
     }
 
-    public void setId(long id)
+    public void setStatusid(long statusid)
     {
-        this.id = id;
+        this.statusid = statusid;
     }
 
     public String getName()
@@ -56,12 +56,12 @@ public class Status extends Auditable implements Serializable
         this.name = name;
     }
 
-    public List<Ticket> getTicket()
+    public Ticket getTicket()
     {
         return ticket;
     }
 
-    public void setTicket(List<Ticket> ticket)
+    public void setTicket(Ticket ticket)
     {
         this.ticket = ticket;
     }

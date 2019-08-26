@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TicketService
 {
-    List<Ticket> findAll(Pageable pageable);
+    List<Ticket> findAll();
 
     Ticket findTicketById(long id);
 

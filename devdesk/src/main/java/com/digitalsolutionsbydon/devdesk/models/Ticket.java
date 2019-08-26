@@ -17,7 +17,7 @@ public class Ticket extends Auditable implements Serializable
     @ApiModelProperty(name="ticketid", value="Primary Key for Tickets", required = true, example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long ticketid;
 
     @ApiModelProperty(name="title", value="Ticket Title", required = true, example = "HELP!")
     @Column(nullable = false)
@@ -31,49 +31,49 @@ public class Ticket extends Auditable implements Serializable
     @Column(nullable=false)
     private String tried;
 
-    @ApiModelProperty(name="Assigned ID", value="User ID of the assigned user", required = false, example="1")
-    private long assignedid;
-
-    @ManyToOne
-    @JoinColumn(name = "userid")
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="userid")
     @JsonIgnoreProperties("ticket")
     private User user;
 
-    @ApiModelProperty(name="Status", value="Status of the Ticket", required = true)
-    @ManyToOne
-    @JoinColumn(name="statusid")
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="assignedid", referencedColumnName = "userid")
     @JsonIgnoreProperties("ticket")
+    private User assigneduser;
+
+    @OneToOne(fetch=FetchType.LAZY)
     private Status status;
 
-    @ApiModelProperty(name="Category", value="Category for Issue", required = true)
-    @ManyToOne
-    @JoinColumn(name="categoryid")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="ticket", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("ticket")
-    private List<Category> category;
+    private List<TicketMapper> ticketMappers = new ArrayList<>();
 
     public Ticket()
     {
     }
 
-    public Ticket(String title, String description, String tried, User user, Status status, List<Category> category)
+    public Ticket(String title, String description, String tried, User user, Status status, List<TicketMapper> ticketMappers)
     {
         this.title = title;
         this.description = description;
         this.tried = tried;
         this.user = user;
         this.status = status;
-        this.category=category;
-
+        for (TicketMapper tm: ticketMappers)
+        {
+            tm.setTicket(this);
+        }
+        this.ticketMappers = ticketMappers;
     }
 
-    public long getId()
+    public long getTicketid()
     {
-        return id;
+        return ticketid;
     }
 
-    public void setId(long id)
+    public void setTicketid(long ticketid)
     {
-        this.id = id;
+        this.ticketid = ticketid;
     }
 
     public String getTitle()
@@ -106,16 +106,6 @@ public class Ticket extends Auditable implements Serializable
         this.tried = tried;
     }
 
-    public long getAssignedid()
-    {
-        return assignedid;
-    }
-
-    public void setAssignedid(long assignedid)
-    {
-        this.assignedid = assignedid;
-    }
-
     public User getUser()
     {
         return user;
@@ -124,6 +114,16 @@ public class Ticket extends Auditable implements Serializable
     public void setUser(User user)
     {
         this.user = user;
+    }
+
+    public User getAssigneduser()
+    {
+        return assigneduser;
+    }
+
+    public void setAssigneduser(User assigneduser)
+    {
+        this.assigneduser = assigneduser;
     }
 
     public Status getStatus()
@@ -136,13 +136,13 @@ public class Ticket extends Auditable implements Serializable
         this.status = status;
     }
 
-    public List<Category> getCategory()
+    public List<TicketMapper> getTicketMappers()
     {
-        return category;
+        return ticketMappers;
     }
 
-    public void setCategory(List<Category> category)
+    public void setTicketMappers(List<TicketMapper> ticketMappers)
     {
-        this.category = category;
+        this.ticketMappers = ticketMappers;
     }
 }
