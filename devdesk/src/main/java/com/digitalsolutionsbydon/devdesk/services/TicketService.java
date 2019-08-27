@@ -14,6 +14,12 @@ public interface TicketService
 
     Ticket assignTicket(long id);
 
+    Ticket resolveTicket(long id);
+
+    Ticket unAssignTicket(long id);
+
+    Ticket archiveTicket(long id);
+
     Ticket save(Ticket ticket);
 
     Ticket update(Ticket ticket, long id);

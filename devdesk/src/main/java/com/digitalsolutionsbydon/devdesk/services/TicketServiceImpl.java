@@ -12,6 +12,7 @@ import com.digitalsolutionsbydon.devdesk.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -143,10 +144,44 @@ public class TicketServiceImpl implements TicketService
     @Override
     public Ticket assignTicket(long id)
     {
-        Ticket assignTicket = ticketRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Ticket with id:" + id + " is not in the system."));
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Ticket assignTicket = ticketRepo.findById(id)
+                                        .orElseThrow(() -> new ResourceNotFoundException("Ticket with id:" + id + " is not in the system."));
+        Authentication authentication = SecurityContextHolder.getContext()
+                                                             .getAuthentication();
         assignTicket.setAssigneduser(userRepo.findByUsername(authentication.getName()));
         assignTicket.setStatus(statusRepo.findByName("Assigned"));
         return ticketRepo.save(assignTicket);
+    }
+
+    @Transactional
+    @Modifying
+    @Override
+    public Ticket resolveTicket(long id)
+    {
+        Ticket resolveTicket = ticketRepo.findById(id)
+                                         .orElseThrow(() -> new ResourceNotFoundException("Ticket with id:" + id + " is not in the system."));
+        resolveTicket.setStatus(statusRepo.findByName("Resolved"));
+        return ticketRepo.save(resolveTicket);
+    }
+
+    @Transactional
+    @Modifying
+    @Override
+    public Ticket unAssignTicket(long id)
+    {
+        Ticket unAssignTicket = ticketRepo.findById(id)
+                                         .orElseThrow(() -> new ResourceNotFoundException("Ticket with id:" + id + " is not in the system."));
+        unAssignTicket.setAssigneduser(null);
+        unAssignTicket.setStatus(statusRepo.findByName("Pending"));
+        return ticketRepo.save(unAssignTicket);
+    }
+
+    @Override
+    public Ticket archiveTicket(long id)
+    {
+        Ticket archiveTicket = ticketRepo.findById(id)
+                                         .orElseThrow(() -> new ResourceNotFoundException("Ticket with id:" + id + " is not in the system."));
+        archiveTicket.setStatus(statusRepo.findByName("Archived"));
+        return ticketRepo.save(archiveTicket);
     }
 }

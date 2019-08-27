@@ -103,15 +103,88 @@ public class TicketController
         return new ResponseEntity<>(ticketService.findTicketById(id), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Add a New Ticket", response = Ticket.class)
+    @ApiOperation(value = "Add a New Ticket",
+            response = Ticket.class)
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    @PostMapping(value="/ticket", consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<?> addNewTicket(@Valid @RequestBody Ticket ticket, HttpServletRequest request)
+    @PostMapping(value = "/ticket",
+            consumes = {"application/json"},
+            produces = {"application/json"})
+    public ResponseEntity<?> addNewTicket(@Valid
+                                          @RequestBody
+                                                  Ticket ticket, HttpServletRequest request)
     {
         logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
         Ticket newTicket = ticketService.save(ticket);
         return new ResponseEntity<>(newTicket, HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Assign a Ticket",
+            response = Ticket.class)
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
+    @PutMapping(value = "/ticket/assign/{id}",
+            produces = {"application/json"})
+    public ResponseEntity<?> assignTicket(
+            @ApiParam(name = "id",
+                    value = "Ticket Id",
+                    required = true,
+                    example = "1")
+            @PathVariable
+                    long id, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        Ticket assignTicket = ticketService.assignTicket(id);
+        return new ResponseEntity<>(assignTicket, HttpStatus.OK);
+    }
 
+    @ApiOperation(value = "Resolves a Ticket",
+            response = Ticket.class)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping(value = "/ticket/resolve/{id}",
+            produces = {"application/json"})
+    public ResponseEntity<?> resolveTicket(
+            @ApiParam(name = "id",
+                    value = "Ticket Id",
+                    required = true,
+                    example = "1")
+            @PathVariable
+                    long id, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        Ticket resolveTicket = ticketService.resolveTicket(id);
+        return new ResponseEntity<>(resolveTicket, HttpStatus.OK);
+    }
+    @ApiOperation(value = "Removes Assigned User From A Ticket",
+            response = Ticket.class)
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
+    @PutMapping(value = "/ticket/unassign/{id}",
+            produces = {"application/json"})
+    public ResponseEntity<?> unAssignTicket(
+            @ApiParam(name = "id",
+                    value = "Ticket Id",
+                    required = true,
+                    example = "1")
+            @PathVariable
+                    long id, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        Ticket unAssignTicket = ticketService.unAssignTicket(id);
+        return new ResponseEntity<>(unAssignTicket, HttpStatus.OK);
+    }
+    @ApiOperation(value = "Archives a Ticket",
+            response = Ticket.class)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping(value = "/ticket/archive/{id}",
+            produces = {"application/json"})
+    public ResponseEntity<?> archiveTicket(
+            @ApiParam(name = "id",
+                    value = "Ticket Id",
+                    required = true,
+                    example = "1")
+            @PathVariable
+                    long id, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        Ticket archiveTicket = ticketService.archiveTicket(id);
+        return new ResponseEntity<>(archiveTicket, HttpStatus.OK);
+    }
 }
