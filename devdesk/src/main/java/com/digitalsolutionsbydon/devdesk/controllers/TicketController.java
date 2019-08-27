@@ -33,18 +33,18 @@ public class TicketController
     @Autowired
     TicketService ticketService;
 
-    @ApiOperation(value = "Returns All Possible Statuses",
-            response = StatusView.class,
-            responseContainer = "List")
-    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    @GetMapping(value = "/statuses",
-            produces = {"application/json"})
-    public ResponseEntity<?> listAllStatuses(HttpServletRequest request)
-    {
-        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
-        List<StatusView> list = statusService.findAllStatus();
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
+//    @ApiOperation(value = "Returns All Possible Statuses",
+//            response = StatusView.class,
+//            responseContainer = "List")
+//    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+//    @GetMapping(value = "/statuses",
+//            produces = {"application/json"})
+//    public ResponseEntity<?> listAllStatuses(HttpServletRequest request)
+//    {
+//        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+//        List<StatusView> list = statusService.findAllStatus();
+//        return new ResponseEntity<>(list, HttpStatus.OK);
+//    }
 
     @ApiOperation(value = "Returns all tickets in the system",
             response = Ticket.class,
