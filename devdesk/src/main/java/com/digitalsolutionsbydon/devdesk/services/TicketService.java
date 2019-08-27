@@ -24,5 +24,7 @@ public interface TicketService
 
     Ticket update(Ticket ticket, long id);
 
+    Ticket adminAssignTicket(long id, long userid);
+
     void deleteTicketById(long id);
 }

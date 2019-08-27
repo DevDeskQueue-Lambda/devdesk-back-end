@@ -3,7 +3,10 @@ package com.digitalsolutionsbydon.devdesk.controllers;
 import com.digitalsolutionsbydon.devdesk.models.Ticket;
 import com.digitalsolutionsbydon.devdesk.services.StatusService;
 import com.digitalsolutionsbydon.devdesk.services.TicketService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -207,16 +210,43 @@ public class TicketController
         return new ResponseEntity<>(updateTicket, HttpStatus.OK);
     }
 
-    @ApiOperation(value="Delete a Ticket", response = Long.class)
+    @ApiOperation(value = "Delete a Ticket",
+            response = Long.class)
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     @DeleteMapping(value = "/ticket/{id}")
-    public ResponseEntity<?> deleteTicket( @ApiParam(name = "id",
-            value = "Ticket Id",
-            required = true,
-            example = "1") @PathVariable long id, HttpServletRequest request)
+    public ResponseEntity<?> deleteTicket(
+            @ApiParam(name = "id",
+                    value = "Ticket Id",
+                    required = true,
+                    example = "1")
+            @PathVariable
+                    long id, HttpServletRequest request)
     {
         logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
         ticketService.deleteTicketById(id);
         return new ResponseEntity<>(id, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Admin assign Staff a Ticket",
+            response = Ticket.class)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PutMapping(value = "/ticket/admin/assign/{id}/{userid}")
+    public ResponseEntity<?> adminAssignUser(
+            @ApiParam(name = "id",
+                    value = "Ticket Id",
+                    required = true,
+                    example = "1")
+            @PathVariable
+                    long id,
+            @ApiParam(name = "userid",
+                    value = "User Id",
+                    required = true,
+                    example = "1")
+            @PathVariable
+                    long userid, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        Ticket assignedTicket = ticketService.adminAssignTicket(id, userid);
+        return new ResponseEntity<>(assignedTicket, HttpStatus.OK);
     }
 }

@@ -165,6 +165,20 @@ public class TicketServiceImpl implements TicketService
     @Transactional
     @Modifying
     @Override
+    public Ticket adminAssignTicket(long id, long userid)
+    {
+        User assignUser = userRepo.findById(userid).orElseThrow(()->new ResourceNotFoundException("The user with id:" + userid + " is not in the system"));
+        Ticket assignTicket =  ticketRepo.findById(id)
+                                         .orElseThrow(() -> new ResourceNotFoundException("Ticket with id:" + id + " is not in the system."));
+        if (assignUser.getUserRoles().size() == 1) throw new BadRequestException("You can only assign Staff to tickets");
+        assignTicket.setAssigneduser(assignUser);
+        assignTicket.setStatus(statusRepo.findByName("Assigned"));
+        return ticketRepo.save(assignTicket);
+    }
+
+    @Transactional
+    @Modifying
+    @Override
     public Ticket resolveTicket(long id)
     {
         Ticket resolveTicket = ticketRepo.findById(id)
