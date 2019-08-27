@@ -1,23 +1,25 @@
 package com.digitalsolutionsbydon.devdesk.controllers;
 
-import com.digitalsolutionsbydon.devdesk.models.Status;
 import com.digitalsolutionsbydon.devdesk.models.Ticket;
 import com.digitalsolutionsbydon.devdesk.services.StatusService;
 import com.digitalsolutionsbydon.devdesk.services.TicketService;
 import com.digitalsolutionsbydon.devdesk.view.StatusView;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,9 +33,12 @@ public class TicketController
     @Autowired
     TicketService ticketService;
 
-    @ApiOperation(value="Returns All Possible Statuses", response=StatusView.class, responseContainer = "List")
+    @ApiOperation(value = "Returns All Possible Statuses",
+            response = StatusView.class,
+            responseContainer = "List")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    @GetMapping(value="/statuses", produces = {"application/json"})
+    @GetMapping(value = "/statuses",
+            produces = {"application/json"})
     public ResponseEntity<?> listAllStatuses(HttpServletRequest request)
     {
         logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
@@ -41,14 +46,72 @@ public class TicketController
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @ApiOperation(value="Returns all tickets in the system", response= Ticket.class, responseContainer = "List")
+    @ApiOperation(value = "Returns all tickets in the system",
+            response = Ticket.class,
+            responseContainer = "List")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    @GetMapping(value="/alltickets", produces = {"application/json"})
+    @GetMapping(value = "/alltickets",
+            produces = {"application/json"})
     public ResponseEntity<?> listAllTickets(Pageable pageable, HttpServletRequest request)
     {
         logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
         List<Ticket> list = ticketService.findAll(pageable);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Returns all tickets in the system based on Paging and Sorting",
+            response = Ticket.class,
+            responseContainer = "List")
+    @ApiImplicitParams({@ApiImplicitParam(name = "page",
+            dataType = "integer",
+            paramType = "query",
+            value = "Results page you want to retrieve(0..N)"), @ApiImplicitParam(name = "size",
+            dataType = "integer",
+            paramType = "query",
+            value = "Number of records per page"), @ApiImplicitParam(name = "sort",
+            allowMultiple = true,
+            dataType = "string",
+            paramType = "query",
+            value = "Sorting criteria in the format: property(,asc,desc.  Default sort order is ascending.  Multiple sort criteria are supported.")})
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @GetMapping(value = "/tickets",
+            produces = {"application/json"})
+    public ResponseEntity<?> listAllTicketsPageAndSorted(
+            @PageableDefault(page = 0,
+                    size = 5)
+                    Pageable pageable, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        List<Ticket> list = ticketService.findAll(pageable);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Retrives a ticket by provided Id",
+            response = Ticket.class)
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @GetMapping(value = "/ticket/{id}",
+            produces = {"application/json"})
+    public ResponseEntity<?> retrieveTicketById(
+            @ApiParam(name = "id",
+                    value = "Ticket Id",
+                    required = true,
+                    example = "1")
+            @PathVariable
+                    long id, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        return new ResponseEntity<>(ticketService.findTicketById(id), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Add a New Ticket", response = Ticket.class)
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @PostMapping(value="/ticket", consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<?> addNewTicket(@Valid @RequestBody Ticket ticket, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        Ticket newTicket = ticketService.save(ticket);
+        return new ResponseEntity<>(newTicket, HttpStatus.CREATED);
+    }
+
 
 }
