@@ -84,42 +84,11 @@ public class UserServiceImpl implements UserService, UserDetailsService
             throw new BadRequestException("Username has already been taken");
         }
         User newUser = new User();
-        if (user.getUsername() != null)
-        {
-            newUser.setUsername(user.getUsername());
-        } else
-        {
-            throw new BadRequestException("The field 'username' cannot be null");
-        }
-        if (user.getPassword() != null)
-        {
-            newUser.setPasswordNoEncrypt(user.getPassword());
-        } else
-        {
-            throw new BadRequestException("The field 'password' cannot be null.");
-        }
-        if (user.getFname() != null)
-        {
-            newUser.setFname(user.getFname());
-        } else
-        {
-            throw new BadRequestException("The field 'fname' cannot be null.");
-        }
-        if (user.getLname() != null)
-        {
-            newUser.setLname(user.getLname());
-        } else
-        {
-            throw new BadRequestException("The field 'lname' cannot be null.");
-        }
-        if (user.getUseremail() != null)
-        {
-            newUser.setUseremail(user.getUseremail());
-        } else
-        {
-            throw new BadRequestException("The field 'useremail' cannot be null.");
-        }
-
+        newUser.setUsername(user.getUsername());
+        newUser.setPasswordNoEncrypt(user.getPassword());
+        newUser.setFname(user.getFname());
+        newUser.setLname(user.getLname());
+        newUser.setUseremail(user.getUseremail());
         ArrayList<UserRoles> newRoles = new ArrayList<>();
         for (UserRoles ur : user.getUserRoles())
         {
