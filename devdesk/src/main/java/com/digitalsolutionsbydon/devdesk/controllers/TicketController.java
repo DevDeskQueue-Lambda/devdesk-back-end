@@ -3,10 +3,7 @@ package com.digitalsolutionsbydon.devdesk.controllers;
 import com.digitalsolutionsbydon.devdesk.models.Ticket;
 import com.digitalsolutionsbydon.devdesk.services.StatusService;
 import com.digitalsolutionsbydon.devdesk.services.TicketService;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,7 +134,7 @@ public class TicketController
 
     @ApiOperation(value = "Resolves a Ticket",
             response = Ticket.class)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_STAFF')")
     @PutMapping(value = "/ticket/resolve/{id}",
             produces = {"application/json"})
     public ResponseEntity<?> resolveTicket(
