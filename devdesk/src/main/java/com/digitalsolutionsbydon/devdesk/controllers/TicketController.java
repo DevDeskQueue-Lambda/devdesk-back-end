@@ -3,7 +3,6 @@ package com.digitalsolutionsbydon.devdesk.controllers;
 import com.digitalsolutionsbydon.devdesk.models.Ticket;
 import com.digitalsolutionsbydon.devdesk.services.StatusService;
 import com.digitalsolutionsbydon.devdesk.services.TicketService;
-import com.digitalsolutionsbydon.devdesk.view.StatusView;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -33,18 +32,18 @@ public class TicketController
     @Autowired
     TicketService ticketService;
 
-//    @ApiOperation(value = "Returns All Possible Statuses",
-//            response = StatusView.class,
-//            responseContainer = "List")
-//    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-//    @GetMapping(value = "/statuses",
-//            produces = {"application/json"})
-//    public ResponseEntity<?> listAllStatuses(HttpServletRequest request)
-//    {
-//        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
-//        List<StatusView> list = statusService.findAllStatus();
-//        return new ResponseEntity<>(list, HttpStatus.OK);
-//    }
+    //    @ApiOperation(value = "Returns All Possible Statuses",
+    //            response = StatusView.class,
+    //            responseContainer = "List")
+    //    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    //    @GetMapping(value = "/statuses",
+    //            produces = {"application/json"})
+    //    public ResponseEntity<?> listAllStatuses(HttpServletRequest request)
+    //    {
+    //        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+    //        List<StatusView> list = statusService.findAllStatus();
+    //        return new ResponseEntity<>(list, HttpStatus.OK);
+    //    }
 
     @ApiOperation(value = "Returns all tickets in the system",
             response = Ticket.class,
@@ -153,6 +152,7 @@ public class TicketController
         Ticket resolveTicket = ticketService.resolveTicket(id);
         return new ResponseEntity<>(resolveTicket, HttpStatus.OK);
     }
+
     @ApiOperation(value = "Removes Assigned User From A Ticket",
             response = Ticket.class)
     @PreAuthorize("hasAuthority('ROLE_STAFF')")
@@ -170,6 +170,7 @@ public class TicketController
         Ticket unAssignTicket = ticketService.unAssignTicket(id);
         return new ResponseEntity<>(unAssignTicket, HttpStatus.OK);
     }
+
     @ApiOperation(value = "Archives a Ticket",
             response = Ticket.class)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -186,5 +187,39 @@ public class TicketController
         logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
         Ticket archiveTicket = ticketService.archiveTicket(id);
         return new ResponseEntity<>(archiveTicket, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Update a Ticket",
+            response = Ticket.class)
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @PutMapping(value = "/ticket/{id}",
+            consumes = {"application/json"},
+            produces = {"application/json"})
+    public ResponseEntity<?> updateTicket(@Valid
+                                          @RequestBody
+                                                  Ticket ticket,
+                                          @ApiParam(name = "id",
+                                                  value = "Ticket Id",
+                                                  required = true,
+                                                  example = "1")
+                                          @PathVariable
+                                                  long id, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        Ticket updateTicket = ticketService.update(ticket, id);
+        return new ResponseEntity<>(updateTicket, HttpStatus.OK);
+    }
+
+    @ApiOperation(value="Delete a Ticket", response = Long.class)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @DeleteMapping(value = "/ticket/{id}")
+    public ResponseEntity<?> deleteTicket( @ApiParam(name = "id",
+            value = "Ticket Id",
+            required = true,
+            example = "1") @PathVariable long id, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        ticketService.deleteTicketById(id);
+        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }

@@ -109,10 +109,6 @@ public class TicketServiceImpl implements TicketService
         {
             updateTicket.setTried(ticket.getTried());
         }
-        if (ticket.getStatus() != null)
-        {
-            updateTicket.setStatus(ticket.getStatus());
-        }
         if (ticket.getTicketMapper()
                   .size() > 0)
         {
