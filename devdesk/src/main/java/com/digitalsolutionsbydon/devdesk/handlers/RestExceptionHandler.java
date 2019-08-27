@@ -3,6 +3,7 @@ package com.digitalsolutionsbydon.devdesk.handlers;
 import com.digitalsolutionsbydon.devdesk.exceptions.BadRequestException;
 import com.digitalsolutionsbydon.devdesk.exceptions.NotAuthorizedException;
 import com.digitalsolutionsbydon.devdesk.exceptions.ResourceNotFoundException;
+import com.digitalsolutionsbydon.devdesk.exceptions.ValidationError;
 import com.digitalsolutionsbydon.devdesk.models.ErrorDetail;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler
@@ -118,12 +121,26 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
-        errorDetail.setTitle(ex.getLocalizedMessage());
-        errorDetail.setDetail(request.getDescription(false));
-        errorDetail.setDeveloperMessage(request.getDescription(true));
-        for (FieldError error: ex.getBindingResult().getFieldErrors())
+        errorDetail.setTitle("Success depends upon previous preparation, and without such preparation there is sure to be failure. --Confucius");
+        errorDetail.setDetail("Input validation failed, check errors Object.");
+        errorDetail.setDeveloperMessage(ex.getClass()
+                                          .getName());
+        List<FieldError> fieldErrors = ex.getBindingResult()
+                                         .getFieldErrors();
+        for (FieldError fe : fieldErrors)
         {
-
+            List<ValidationError> validationErrorList = errorDetail.getErrors()
+                                                                   .get(fe.getField());
+            if (validationErrorList == null)
+            {
+                validationErrorList = new ArrayList<>();
+                errorDetail.getErrors()
+                           .put(fe.getField(), validationErrorList);
+            }
+            ValidationError validationError = new ValidationError();
+            validationError.setCode(fe.getCode());
+            validationError.setMessage(fe.getDefaultMessage());
+            validationErrorList.add(validationError);
         }
         return new ResponseEntity<>(errorDetail, null, HttpStatus.BAD_REQUEST);
     }
