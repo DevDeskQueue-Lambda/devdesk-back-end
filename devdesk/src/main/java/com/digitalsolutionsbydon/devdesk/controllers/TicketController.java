@@ -208,7 +208,7 @@ public class TicketController
     }
 
     @ApiOperation(value="Delete a Ticket", response = Long.class)
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     @DeleteMapping(value = "/ticket/{id}")
     public ResponseEntity<?> deleteTicket( @ApiParam(name = "id",
             value = "Ticket Id",

@@ -5,6 +5,7 @@ import com.digitalsolutionsbydon.devdesk.exceptions.NotAuthorizedException;
 import com.digitalsolutionsbydon.devdesk.exceptions.ResourceNotFoundException;
 import com.digitalsolutionsbydon.devdesk.models.Ticket;
 import com.digitalsolutionsbydon.devdesk.models.TicketMapper;
+import com.digitalsolutionsbydon.devdesk.models.User;
 import com.digitalsolutionsbydon.devdesk.repositories.CategoryRepository;
 import com.digitalsolutionsbydon.devdesk.repositories.StatusRepository;
 import com.digitalsolutionsbydon.devdesk.repositories.TicketRepository;
@@ -12,7 +13,6 @@ import com.digitalsolutionsbydon.devdesk.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -125,13 +125,26 @@ public class TicketServiceImpl implements TicketService
     @Override
     public void deleteTicketById(long id) throws ResourceNotFoundException
     {
-        if (ticketRepo.findById(id)
-                      .isPresent())
+        Authentication authentication = SecurityContextHolder.getContext()
+                                                             .getAuthentication();
+        Ticket deleteTicket = findTicketById(id);
+        User currentUser = userRepo.findByUsername(authentication.getName());
+        if (deleteTicket != null)
         {
-            ticketRepo.deleteById(id);
-        } else
-        {
-            throw new ResourceNotFoundException("Ticket with id:" + id + " is not in the system.");
+            if (currentUser.getUserRoles()
+                           .size()  < 2)
+            {
+                if (deleteTicket.getUser().getUserid() == currentUser.getUserid())
+                {
+                    ticketRepo.deleteById(id);
+                } else
+                {
+                    throw new NotAuthorizedException("You may only delete tickets that you own.");
+                }
+            } else
+            {
+                ticketRepo.deleteById(id);
+            }
         }
     }
 
@@ -166,7 +179,7 @@ public class TicketServiceImpl implements TicketService
     public Ticket unAssignTicket(long id)
     {
         Ticket unAssignTicket = ticketRepo.findById(id)
-                                         .orElseThrow(() -> new ResourceNotFoundException("Ticket with id:" + id + " is not in the system."));
+                                          .orElseThrow(() -> new ResourceNotFoundException("Ticket with id:" + id + " is not in the system."));
         unAssignTicket.setAssigneduser(null);
         unAssignTicket.setStatus(statusRepo.findByName("Pending"));
         return ticketRepo.save(unAssignTicket);
