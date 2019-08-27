@@ -12,7 +12,7 @@ import java.util.List;
 @ApiModel(value = "Status", description = "Available Status for Tickets")
 @Entity
 @Table(name = "status")
-public class Status extends Auditable implements Serializable
+public class Status extends Auditable
 {
     @ApiModelProperty(name="statusid", value="Primary Key for Status", required = true, example = "1")
     @Id

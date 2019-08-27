@@ -31,39 +31,41 @@ public class Ticket extends Auditable implements Serializable
     @Column(nullable=false)
     private String tried;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="userid")
     @JsonIgnoreProperties("ticket")
     private User user;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne()
     @JoinColumn(name="assignedid", referencedColumnName = "userid")
     @JsonIgnoreProperties("ticket")
     private User assigneduser;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne()
+    @JoinColumn(name="statusid")
+    @JsonIgnoreProperties("ticket")
     private Status status;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="ticket", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="ticket", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("ticket")
-    private List<TicketMapper> ticketMappers = new ArrayList<>();
+    private List<TicketMapper> ticketMapper = new ArrayList<>();
 
     public Ticket()
     {
     }
 
-    public Ticket(String title, String description, String tried, User user, Status status, List<TicketMapper> ticketMappers)
+    public Ticket(String title, String description, String tried, User user, Status status, List<TicketMapper> ticketMapper)
     {
         this.title = title;
         this.description = description;
         this.tried = tried;
         this.user = user;
         this.status = status;
-        for (TicketMapper tm: ticketMappers)
+        for (TicketMapper tm: ticketMapper)
         {
             tm.setTicket(this);
         }
-        this.ticketMappers = ticketMappers;
+        this.ticketMapper = ticketMapper;
     }
 
     public long getTicketid()
@@ -136,13 +138,13 @@ public class Ticket extends Auditable implements Serializable
         this.status = status;
     }
 
-    public List<TicketMapper> getTicketMappers()
+    public List<TicketMapper> getTicketMapper()
     {
-        return ticketMappers;
+        return ticketMapper;
     }
 
-    public void setTicketMappers(List<TicketMapper> ticketMappers)
+    public void setTicketMapper(List<TicketMapper> ticketMapper)
     {
-        this.ticketMappers = ticketMappers;
+        this.ticketMapper = ticketMapper;
     }
 }

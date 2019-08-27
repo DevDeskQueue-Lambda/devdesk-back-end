@@ -15,16 +15,16 @@ public class TicketMapper extends Auditable implements Serializable
 {
     @ApiModelProperty(name="ticketid", value="Foreign Key for Ticket Table", required = true, example = "1")
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ticketid")
-    @JsonIgnoreProperties("ticketMapper")
+    @JsonIgnoreProperties({"ticketMapper", "hibernateLazyInitializer"})
     private Ticket ticket;
 
     @ApiModelProperty(name="categoryid", value="Foreign Key for Category Table", required = true, example="1")
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="categoryid")
-    @JsonIgnoreProperties("ticketMapper")
+    @JsonIgnoreProperties({"ticketMapper", "hibernateLazyInitializer"})
     private Category category;
 
     public TicketMapper()

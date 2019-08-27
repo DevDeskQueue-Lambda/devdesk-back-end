@@ -79,7 +79,6 @@ public class UserServiceImpl implements UserService, UserDetailsService
     @Override
     public User save(User user)
     {
-        System.out.println(user.getUsername());
         if (userRepo.findByUsername(user.getUsername()) != null)
         {
             throw new BadRequestException("Username has already been taken");

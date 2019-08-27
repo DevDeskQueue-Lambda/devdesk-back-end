@@ -13,7 +13,7 @@ import java.util.List;
         description = "Where the Categories are Stored")
 @Entity
 @Table(name = "categories")
-public class Category extends Auditable implements Serializable
+public class Category extends Auditable
 {
     @ApiModelProperty(name = "categoryid",
             value = "The Primary Key for the Categories",
@@ -31,9 +31,9 @@ public class Category extends Auditable implements Serializable
             unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("category")
-    private List<TicketMapper> ticketMappers = new ArrayList<>();
+    private List<TicketMapper> ticketMapper = new ArrayList<>();
 
     public Category()
     {
@@ -64,13 +64,13 @@ public class Category extends Auditable implements Serializable
         this.name = name;
     }
 
-    public List<TicketMapper> getTicketMappers()
+    public List<TicketMapper> getTicketMapper()
     {
-        return ticketMappers;
+        return ticketMapper;
     }
 
-    public void setTicketMappers(List<TicketMapper> ticketMappers)
+    public void setTicketMappers(List<TicketMapper> ticketMapper)
     {
-        this.ticketMappers = ticketMappers;
+        this.ticketMapper = ticketMapper;
     }
 }

@@ -11,10 +11,6 @@ public interface RoleService
 
     List<RoleIdsAndNames> findRoleIdsAndNames();
 
-    Role findRoleByRoleId(long id);
-
-    void deleteRoleByRoleId(long id);
-
     Role save(Role role);
 
     Role findRoleByRoleName(String name);

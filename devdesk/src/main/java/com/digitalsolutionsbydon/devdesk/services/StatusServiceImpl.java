@@ -2,6 +2,7 @@ package com.digitalsolutionsbydon.devdesk.services;
 
 import com.digitalsolutionsbydon.devdesk.models.Status;
 import com.digitalsolutionsbydon.devdesk.repositories.StatusRepository;
+import com.digitalsolutionsbydon.devdesk.view.StatusView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,17 @@ public class StatusServiceImpl implements StatusService
 {
     @Autowired
     StatusRepository statusRepo;
+
     @Override
     public List<Status> findAll()
     {
         List<Status> list = new ArrayList<>();
-        statusRepo.findAll().iterator().forEachRemaining(list::add);
+        statusRepo.findAll()
+                  .iterator()
+                  .forEachRemaining(list::add);
         return list;
     }
+
     @Transactional
     @Modifying
     @Override
@@ -31,5 +36,13 @@ public class StatusServiceImpl implements StatusService
         Status newStatus = new Status();
         newStatus.setName(status.getName());
         return statusRepo.save(newStatus);
+    }
+
+    @Override
+    public List<StatusView> findAllStatus()
+    {
+        List<StatusView> list = new ArrayList<>();
+        statusRepo.findAllCustom().iterator().forEachRemaining(list::add);
+        return list;
     }
 }
