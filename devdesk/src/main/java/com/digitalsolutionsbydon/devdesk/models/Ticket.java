@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +22,17 @@ public class Ticket extends Auditable implements Serializable
 
     @ApiModelProperty(name="title", value="Ticket Title", required = true, example = "HELP!")
     @Column(nullable = false)
+    @NotNull(message = "The field 'title' cannot be null")
     private String title;
 
     @ApiModelProperty(name="description", value="Description of Problem", required = true, example="My JAVA won't Compile")
     @Column(nullable=false)
+    @NotNull(message="The field 'description' cannot be null")
     private String description;
 
     @ApiModelProperty(name="tried", value="Methods Tried", required = true, example="Restarted Computer")
     @Column(nullable=false)
+    @NotNull(message="The field 'tried' cannot be null")
     private String tried;
 
     @ManyToOne
