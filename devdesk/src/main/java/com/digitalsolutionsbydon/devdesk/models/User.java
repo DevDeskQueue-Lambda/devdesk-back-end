@@ -91,6 +91,10 @@ public class User extends Auditable
     @JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
     private List<Ticket> assigneduser = new ArrayList<>();
 
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @JsonProperty(access= JsonProperty.Access.WRITE_ONLY)
+    private List<Comment> comment = new ArrayList<>();
+
       public User()
     {
     }
@@ -207,6 +211,16 @@ public class User extends Auditable
     public void setAssigneduser(List<Ticket> assigneduser)
     {
         this.assigneduser = assigneduser;
+    }
+
+    public List<Comment> getComment()
+    {
+        return comment;
+    }
+
+    public void setComment(List<Comment> comment)
+    {
+        this.comment = comment;
     }
 
     public List<SimpleGrantedAuthority> getAuthority()
