@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,8 @@ public class User extends Auditable
     @Column(unique = true,
             nullable = false)
     @Size(min = 5,
-            max = 20)
+            max = 20, message="Must be between 5 and 20 characters long")
+    @NotNull(message = "The field 'username' must not be null")
     private String username;
 
     @ApiModelProperty(name = "password",
@@ -44,6 +46,7 @@ public class User extends Auditable
     @Column(unique = true,
             nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull(message = "The field 'password' must not be null")
     private String password;
 
     @ApiModelProperty(name = "fname",
@@ -53,7 +56,8 @@ public class User extends Auditable
     @Column(unique = true,
             nullable = false)
     @Size(min = 2,
-            max = 20)
+            max = 20, message="Must be between 2 and 20 characters long")
+    @NotNull(message = "The field 'fname' must not be null")
     private String fname;
 
     @ApiModelProperty(name = "lname",
@@ -63,7 +67,8 @@ public class User extends Auditable
     @Column(unique = true,
             nullable = false)
     @Size(min = 2,
-            max = 20)
+            max = 20, message="Must be between 2 and 20 characters long")
+    @NotNull(message = "The field 'lname' must not be null")
     private String lname;
 
     @ApiModelProperty(name = "useremail",
@@ -72,7 +77,8 @@ public class User extends Auditable
             example = "rhamblin@gmail.com")
     @Column(unique = true,
             nullable = false)
-    @Email
+    @Email(message = "Invalid Email Address")
+    @NotNull(message = "The field 'useremail' must not be null")
     private String useremail;
 
     @OneToMany(mappedBy = "user",
