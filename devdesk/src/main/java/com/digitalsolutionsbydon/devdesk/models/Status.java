@@ -23,9 +23,9 @@ public class Status extends Auditable
     @Column(unique = true, nullable = false)
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy="status", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="status", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("status")
-    private Ticket ticket;
+    private List<Ticket> ticket;
 
     public Status()
     {
@@ -56,12 +56,12 @@ public class Status extends Auditable
         this.name = name;
     }
 
-    public Ticket getTicket()
+    public List<Ticket> getTicket()
     {
         return ticket;
     }
 
-    public void setTicket(Ticket ticket)
+    public void setTicket(List<Ticket> ticket)
     {
         this.ticket = ticket;
     }

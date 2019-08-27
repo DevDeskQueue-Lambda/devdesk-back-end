@@ -1,12 +1,15 @@
 package com.digitalsolutionsbydon.devdesk.controllers;
 
 import com.digitalsolutionsbydon.devdesk.models.Status;
+import com.digitalsolutionsbydon.devdesk.models.Ticket;
 import com.digitalsolutionsbydon.devdesk.services.StatusService;
+import com.digitalsolutionsbydon.devdesk.services.TicketService;
 import com.digitalsolutionsbydon.devdesk.view.StatusView;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +28,9 @@ public class TicketController
     @Autowired
     StatusService statusService;
 
+    @Autowired
+    TicketService ticketService;
+
     @ApiOperation(value="Returns All Possible Statuses", response=StatusView.class, responseContainer = "List")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     @GetMapping(value="/statuses", produces = {"application/json"})
@@ -34,4 +40,15 @@ public class TicketController
         List<StatusView> list = statusService.findAllStatus();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+    @ApiOperation(value="Returns all tickets in the system", response= Ticket.class, responseContainer = "List")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @GetMapping(value="/alltickets", produces = {"application/json"})
+    public ResponseEntity<?> listAllTickets(Pageable pageable, HttpServletRequest request)
+    {
+        logger.info(request.getMethod() + " " + request.getRequestURI() + " accessed");
+        List<Ticket> list = ticketService.findAll(pageable);
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
 }

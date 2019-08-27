@@ -84,9 +84,9 @@ public class User extends Auditable
     @JsonIgnoreProperties("user")
     private List<Ticket> ticket = new ArrayList<>();
 
-    @OneToOne(mappedBy="assigneduser")
+    @OneToMany(mappedBy="assigneduser")
     @JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
-    private Ticket assigneduser;
+    private List<Ticket> assigneduser = new ArrayList<>();
 
       public User()
     {
@@ -196,12 +196,12 @@ public class User extends Auditable
         this.ticket = ticket;
     }
 
-    public Ticket getAssigneduser()
+    public List<Ticket> getAssigneduser()
     {
         return assigneduser;
     }
 
-    public void setAssigneduser(Ticket assigneduser)
+    public void setAssigneduser(List<Ticket> assigneduser)
     {
         this.assigneduser = assigneduser;
     }

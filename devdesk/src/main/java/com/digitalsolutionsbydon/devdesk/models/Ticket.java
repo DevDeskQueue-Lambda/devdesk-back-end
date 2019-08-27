@@ -36,12 +36,12 @@ public class Ticket extends Auditable implements Serializable
     @JsonIgnoreProperties("ticket")
     private User user;
 
-    @OneToOne()
+    @ManyToOne
     @JoinColumn(name="assignedid", referencedColumnName = "userid")
     @JsonIgnoreProperties("ticket")
     private User assigneduser;
 
-    @OneToOne()
+    @ManyToOne
     @JoinColumn(name="statusid")
     @JsonIgnoreProperties("ticket")
     private Status status;
