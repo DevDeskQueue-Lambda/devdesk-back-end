@@ -74,7 +74,7 @@ public class TicketServiceImpl implements TicketService
         ArrayList<TicketMapper> newTicketMapper = new ArrayList<>();
         for (TicketMapper tm : ticket.getTicketMapper())
         {
-            newTicketMapper.add(tm);
+            newTicketMapper.add(new TicketMapper(newTicket, tm.getCategory()));
         }
         newTicket.setTicketMapper(newTicketMapper);
         return ticketRepo.save(newTicket);
