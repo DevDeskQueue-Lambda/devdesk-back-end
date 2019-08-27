@@ -137,4 +137,16 @@ public class TicketServiceImpl implements TicketService
             throw new ResourceNotFoundException("Ticket with id:" + id + " is not in the system.");
         }
     }
+
+    @Transactional
+    @Modifying
+    @Override
+    public Ticket assignTicket(long id)
+    {
+        Ticket assignTicket = ticketRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Ticket with id:" + id + " is not in the system."));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        assignTicket.setAssigneduser(userRepo.findByUsername(authentication.getName()));
+        assignTicket.setStatus(statusRepo.findByName("Assigned"));
+        return ticketRepo.save(assignTicket);
+    }
 }
