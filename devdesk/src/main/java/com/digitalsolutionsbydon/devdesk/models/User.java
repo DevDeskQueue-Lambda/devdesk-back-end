@@ -43,8 +43,7 @@ public class User extends Auditable
             value = "User's password",
             required = true,
             example = "password")
-    @Column(unique = true,
-            nullable = false)
+    @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotNull(message = "The field 'password' must not be null")
     private String password;
@@ -53,8 +52,7 @@ public class User extends Auditable
             value = "User's First Name",
             required = true,
             example = "Ryan")
-    @Column(unique = true,
-            nullable = false)
+    @Column(nullable = false)
     @Size(min = 2,
             max = 20, message="Must be between 2 and 20 characters long")
     @NotNull(message = "The field 'fname' must not be null")
@@ -64,8 +62,7 @@ public class User extends Auditable
             value = "User's Last Name",
             required = true,
             example = "Hamblin")
-    @Column(unique = true,
-            nullable = false)
+    @Column(nullable = false)
     @Size(min = 2,
             max = 20, message="Must be between 2 and 20 characters long")
     @NotNull(message = "The field 'lname' must not be null")

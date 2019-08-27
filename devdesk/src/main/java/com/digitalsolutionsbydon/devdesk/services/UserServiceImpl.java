@@ -83,6 +83,10 @@ public class UserServiceImpl implements UserService, UserDetailsService
         {
             throw new BadRequestException("Username has already been taken");
         }
+        if (userRepo.findByUsername(user.getUseremail()) != null)
+        {
+            throw new BadRequestException("Email has already been taken");
+        }
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPasswordNoEncrypt(user.getPassword());
@@ -207,4 +211,17 @@ public class UserServiceImpl implements UserService, UserDetailsService
         }
     }
 
+    @Override
+    public User findUserByEmail(String useremail)
+    {
+        User currentUser = userRepo.findByUseremail(useremail);
+
+        if (currentUser != null)
+        {
+            return currentUser;
+        } else
+        {
+            throw new ResourceNotFoundException("The " + useremail + " is not in the system");
+        }
+    }
 }

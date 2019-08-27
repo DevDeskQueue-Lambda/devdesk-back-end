@@ -12,6 +12,8 @@ public interface UserService
 
     User findUserByUserId(long id);
 
+    User findUserByEmail(String useremail);
+
     User findUserByUsername(String username);
 
     User save(User user);
