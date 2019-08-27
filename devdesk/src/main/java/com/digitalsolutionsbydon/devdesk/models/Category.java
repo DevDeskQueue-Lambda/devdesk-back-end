@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class Category extends Auditable
             example = "React")
     @Column(nullable = false,
             unique = true)
+    @NotNull(message = "The field 'name' cannot be null")
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
