@@ -12,6 +12,8 @@ public interface TicketService
 
     Ticket findTicketById(long id);
 
+    Ticket assignTicket(long id);
+
     Ticket save(Ticket ticket);
 
     Ticket update(Ticket ticket, long id);
