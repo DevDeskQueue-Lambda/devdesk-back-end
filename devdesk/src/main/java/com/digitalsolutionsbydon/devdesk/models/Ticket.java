@@ -54,22 +54,31 @@ public class Ticket extends Auditable implements Serializable
     @JsonIgnoreProperties("ticket")
     private List<TicketCategories> ticketCategories = new ArrayList<>();
 
+    @OneToMany(mappedBy="ticket", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("ticket")
+    private List<TicketComments> ticketComments = new ArrayList<>();
+
     public Ticket()
     {
     }
 
-    public Ticket(String title, String description, String tried, User user, Status status, List<TicketCategories> ticketCategories)
+    public Ticket(@NotNull(message = "The field 'title' cannot be null") String title, @NotNull(message = "The field 'description' cannot be null") String description, @NotNull(message = "The field 'tried' cannot be null") String tried, User user, Status status, List<TicketCategories> ticketCategories, List<TicketComments> ticketComments)
     {
         this.title = title;
         this.description = description;
         this.tried = tried;
         this.user = user;
         this.status = status;
-        for (TicketCategories tm: ticketCategories)
+        for (TicketCategories tc: ticketCategories)
         {
-            tm.setTicket(this);
+            tc.setTicket(this);
         }
         this.ticketCategories = ticketCategories;
+        for (TicketComments tcc: ticketComments)
+        {
+            tcc.setTicket(this);
+        }
+        this.ticketComments = ticketComments;
     }
 
     public long getTicketid()
@@ -150,5 +159,15 @@ public class Ticket extends Auditable implements Serializable
     public void setTicketCategories(List<TicketCategories> ticketCategories)
     {
         this.ticketCategories = ticketCategories;
+    }
+
+    public List<TicketComments> getTicketComments()
+    {
+        return ticketComments;
+    }
+
+    public void setTicketComments(List<TicketComments> ticketComments)
+    {
+        this.ticketComments = ticketComments;
     }
 }
