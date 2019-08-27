@@ -10,28 +10,28 @@ import java.util.Objects;
 
 @ApiModel(value="Ticket Mapper", description = "This will keep track of all the Tickets")
 @Entity
-@Table(name = "ticketmapper")
-public class TicketMapper extends Auditable implements Serializable
+@Table(name = "ticketcategories")
+public class TicketCategories extends Auditable implements Serializable
 {
     @ApiModelProperty(name="ticketid", value="Foreign Key for Ticket Table", required = true, example = "1")
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ticketid")
-    @JsonIgnoreProperties({"ticketMapper", "hibernateLazyInitializer"})
+    @JsonIgnoreProperties({"ticketCategories", "hibernateLazyInitializer"})
     private Ticket ticket;
 
     @ApiModelProperty(name="categoryid", value="Foreign Key for Category Table", required = true, example="1")
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="categoryid")
-    @JsonIgnoreProperties({"ticketMapper", "hibernateLazyInitializer"})
+    @JsonIgnoreProperties({"ticketCategories", "hibernateLazyInitializer"})
     private Category category;
 
-    public TicketMapper()
+    public TicketCategories()
     {
     }
 
-    public TicketMapper(Ticket ticket, Category category)
+    public TicketCategories(Ticket ticket, Category category)
     {
         this.ticket = ticket;
         this.category = category;
@@ -64,11 +64,11 @@ public class TicketMapper extends Auditable implements Serializable
         {
             return true;
         }
-        if (!(o instanceof TicketMapper))
+        if (!(o instanceof TicketCategories))
         {
             return false;
         }
-        TicketMapper that = (TicketMapper) o;
+        TicketCategories that = (TicketCategories) o;
         return getTicket().equals(that.getTicket()) && getCategory().equals(that.getCategory());
     }
 

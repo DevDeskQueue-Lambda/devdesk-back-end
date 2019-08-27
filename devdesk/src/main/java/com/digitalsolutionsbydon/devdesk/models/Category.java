@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class Category extends Auditable
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("category")
-    private List<TicketMapper> ticketMapper = new ArrayList<>();
+    private List<TicketCategories> ticketCategories = new ArrayList<>();
 
     public Category()
     {
@@ -66,13 +65,13 @@ public class Category extends Auditable
         this.name = name;
     }
 
-    public List<TicketMapper> getTicketMapper()
+    public List<TicketCategories> getTicketCategories()
     {
-        return ticketMapper;
+        return ticketCategories;
     }
 
-    public void setTicketMappers(List<TicketMapper> ticketMapper)
+    public void setTicketMappers(List<TicketCategories> ticketCategories)
     {
-        this.ticketMapper = ticketMapper;
+        this.ticketCategories = ticketCategories;
     }
 }

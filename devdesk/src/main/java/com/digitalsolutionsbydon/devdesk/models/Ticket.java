@@ -52,24 +52,24 @@ public class Ticket extends Auditable implements Serializable
 
     @OneToMany(mappedBy="ticket", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("ticket")
-    private List<TicketMapper> ticketMapper = new ArrayList<>();
+    private List<TicketCategories> ticketCategories = new ArrayList<>();
 
     public Ticket()
     {
     }
 
-    public Ticket(String title, String description, String tried, User user, Status status, List<TicketMapper> ticketMapper)
+    public Ticket(String title, String description, String tried, User user, Status status, List<TicketCategories> ticketCategories)
     {
         this.title = title;
         this.description = description;
         this.tried = tried;
         this.user = user;
         this.status = status;
-        for (TicketMapper tm: ticketMapper)
+        for (TicketCategories tm: ticketCategories)
         {
             tm.setTicket(this);
         }
-        this.ticketMapper = ticketMapper;
+        this.ticketCategories = ticketCategories;
     }
 
     public long getTicketid()
@@ -142,13 +142,13 @@ public class Ticket extends Auditable implements Serializable
         this.status = status;
     }
 
-    public List<TicketMapper> getTicketMapper()
+    public List<TicketCategories> getTicketCategories()
     {
-        return ticketMapper;
+        return ticketCategories;
     }
 
-    public void setTicketMapper(List<TicketMapper> ticketMapper)
+    public void setTicketCategories(List<TicketCategories> ticketCategories)
     {
-        this.ticketMapper = ticketMapper;
+        this.ticketCategories = ticketCategories;
     }
 }

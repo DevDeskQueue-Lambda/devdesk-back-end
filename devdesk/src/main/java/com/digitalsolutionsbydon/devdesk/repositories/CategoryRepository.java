@@ -13,13 +13,13 @@ public interface CategoryRepository extends CrudRepository<Category, Long>
 {
     @Transactional
     @Modifying
-    @Query(value = "DELETE FROM TicketMapper WHERE ticketid = :ticketid")
-    void deleteTicketMapperByTicketId(long ticketid);
+    @Query(value = "DELETE FROM TicketCategories WHERE ticketid = :ticketid")
+    void deleteTicketCategoriesByTicketId(long ticketid);
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO TicketMapper(ticketid, categoryid) values(:ticketid, :categoryid)", nativeQuery = true)
-    void insertIntoTicketMapper(long ticketid, long categoryid);
+    @Query(value = "INSERT INTO TicketCategories(ticketid, categoryid) values(:ticketid, :categoryid)", nativeQuery = true)
+    void insertIntoTicketCategories(long ticketid, long categoryid);
 
     @Query(value = "SELECT categoryid, name FROM categories", nativeQuery = true)
     List<CategoryView> findAllByCustom();

@@ -4,7 +4,7 @@ import com.digitalsolutionsbydon.devdesk.exceptions.BadRequestException;
 import com.digitalsolutionsbydon.devdesk.exceptions.NotAuthorizedException;
 import com.digitalsolutionsbydon.devdesk.exceptions.ResourceNotFoundException;
 import com.digitalsolutionsbydon.devdesk.models.Ticket;
-import com.digitalsolutionsbydon.devdesk.models.TicketMapper;
+import com.digitalsolutionsbydon.devdesk.models.TicketCategories;
 import com.digitalsolutionsbydon.devdesk.models.User;
 import com.digitalsolutionsbydon.devdesk.repositories.CategoryRepository;
 import com.digitalsolutionsbydon.devdesk.repositories.StatusRepository;
@@ -67,17 +67,17 @@ public class TicketServiceImpl implements TicketService
                                                              .getAuthentication();
         newTicket.setUser(userRepo.findByUsername(authentication.getName()));
         newTicket.setStatus(statusRepo.findByName("Pending"));
-        if (ticket.getTicketMapper()
+        if (ticket.getTicketCategories()
                   .size() == 0)
         {
             throw new BadRequestException("The Category Array of Object(s) is required.");
         }
-        ArrayList<TicketMapper> newTicketMapper = new ArrayList<>();
-        for (TicketMapper tm : ticket.getTicketMapper())
+        ArrayList<TicketCategories> newTicketCategories = new ArrayList<>();
+        for (TicketCategories tm : ticket.getTicketCategories())
         {
-            newTicketMapper.add(new TicketMapper(newTicket, tm.getCategory()));
+            newTicketCategories.add(new TicketCategories(newTicket, tm.getCategory()));
         }
-        newTicket.setTicketMapper(newTicketMapper);
+        newTicket.setTicketCategories(newTicketCategories);
         return ticketRepo.save(newTicket);
     }
 
@@ -109,13 +109,13 @@ public class TicketServiceImpl implements TicketService
         {
             updateTicket.setTried(ticket.getTried());
         }
-        if (ticket.getTicketMapper()
+        if (ticket.getTicketCategories()
                   .size() > 0)
         {
-            categoryRepo.deleteTicketMapperByTicketId(ticket.getTicketid());
-            for (TicketMapper tm : ticket.getTicketMapper())
+            categoryRepo.deleteTicketCategoriesByTicketId(ticket.getTicketid());
+            for (TicketCategories tm : ticket.getTicketCategories())
             {
-                categoryRepo.insertIntoTicketMapper(ticket.getTicketid(), tm.getCategory()
+                categoryRepo.insertIntoTicketCategories(ticket.getTicketid(), tm.getCategory()
                                                                             .getCategoryid());
             }
         }

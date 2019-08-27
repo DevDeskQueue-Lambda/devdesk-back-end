@@ -57,7 +57,7 @@ public class SeedData implements CommandLineRunner
         User u1 = new User("admin", "password", "Ryan", "Hamblin", "ryan@gmail.com", admin);
         User u2 = new User("staff", "password", "Dustin", "Myers", "dustin@reactjs.org", staff);
         User u3 = new User("student", "password", "Nick", "Durbin", "nick@nickisawesome.org", student);
-        User u4 = new User("scarroll", "password", "Skylear", "Carroll", "iluvdarkmode@darkmode.com", staff);
+        User u4 = new User("scarroll", "password", "Skyelar", "Carroll", "iluvdarkmode@darkmode.com", staff);
         u1 = userService.save(u1);
         u2 = userService.save(u2);
         u3 = userService.save(u3);
@@ -82,20 +82,20 @@ public class SeedData implements CommandLineRunner
         c3=categoryService.save(c3);
         c4=categoryService.save(c4);
 
-        ArrayList<TicketMapper> tm1 = new ArrayList<>();
-        tm1.add(new TicketMapper(new Ticket(), c1));
+        ArrayList<TicketCategories> tm1 = new ArrayList<>();
+        tm1.add(new TicketCategories(new Ticket(), c1));
         Ticket t1 = new Ticket("Test", "Testing New Ticket Database", "Muliple Schemas", u3, s1, tm1);
         ticketRepo.save(t1);
-        ArrayList<TicketMapper> tm2 = new ArrayList<>();
-        tm2.add(new TicketMapper(new Ticket(), c2));
-        tm2.add(new TicketMapper(new Ticket(), c4));
+        ArrayList<TicketCategories> tm2 = new ArrayList<>();
+        tm2.add(new TicketCategories(new Ticket(), c2));
+        tm2.add(new TicketCategories(new Ticket(), c4));
         Ticket t2 = new Ticket("JavaScript", "Event Listener is not listening to my event listener", "Interviewing for JavaScript", u3, s1, tm2);
         ticketRepo.save(t2);
-        ArrayList<TicketMapper> tm3 = new ArrayList<>();
-        tm3.add(new TicketMapper(new Ticket(), c1));
-        tm3.add(new TicketMapper(new Ticket(), c2));
-        tm3.add(new TicketMapper(new Ticket(), c3));
-        tm3.add(new TicketMapper(new Ticket(), c4));
+        ArrayList<TicketCategories> tm3 = new ArrayList<>();
+        tm3.add(new TicketCategories(new Ticket(), c1));
+        tm3.add(new TicketCategories(new Ticket(), c2));
+        tm3.add(new TicketCategories(new Ticket(), c3));
+        tm3.add(new TicketCategories(new Ticket(), c4));
         Ticket t3 = new Ticket("React", "My React App made 50000 calls to my Firebase DB in an hour", "Contacted Google", u4, s1, tm3);
         ticketRepo.save(t3);
     }
