@@ -59,27 +59,9 @@ public class TicketServiceImpl implements TicketService
     public Ticket save(Ticket ticket)
     {
         Ticket newTicket = new Ticket();
-        if (ticket.getTitle() != null)
-        {
-            newTicket.setTitle(ticket.getTitle());
-        } else
-        {
-            throw new BadRequestException("The field 'title' is required.");
-        }
-        if (ticket.getDescription() != null)
-        {
-            newTicket.setDescription(ticket.getDescription());
-        } else
-        {
-            throw new BadRequestException("The field 'description' is required.");
-        }
-        if (ticket.getTried() != null)
-        {
-            newTicket.setTried(ticket.getTried());
-        } else
-        {
-            throw new BadRequestException("The field 'tried' is required.");
-        }
+        newTicket.setTitle(ticket.getTitle());
+        newTicket.setDescription(ticket.getDescription());
+        newTicket.setTried(ticket.getTried());
         Authentication authentication = SecurityContextHolder.getContext()
                                                              .getAuthentication();
         newTicket.setUser(userRepo.findByUsername(authentication.getName()));
@@ -114,28 +96,30 @@ public class TicketServiceImpl implements TicketService
                 throw new NotAuthorizedException("You cannot change the user on a ticket");
             }
         }
-        if (ticket.getTitle()!= null)
+        if (ticket.getTitle() != null)
         {
             updateTicket.setTitle(ticket.getTitle());
         }
-        if (ticket.getDescription()!=null)
+        if (ticket.getDescription() != null)
         {
             updateTicket.setDescription(ticket.getDescription());
         }
-        if (ticket.getTried()!=null)
+        if (ticket.getTried() != null)
         {
             updateTicket.setTried(ticket.getTried());
         }
-        if (ticket.getStatus()!=null)
+        if (ticket.getStatus() != null)
         {
             updateTicket.setStatus(ticket.getStatus());
         }
-        if (ticket.getTicketMapper().size()>0)
+        if (ticket.getTicketMapper()
+                  .size() > 0)
         {
             categoryRepo.deleteTicketMapperByTicketId(ticket.getTicketid());
             for (TicketMapper tm : ticket.getTicketMapper())
             {
-                categoryRepo.insertIntoTicketMapper(ticket.getTicketid(), tm.getCategory().getCategoryid());
+                categoryRepo.insertIntoTicketMapper(ticket.getTicketid(), tm.getCategory()
+                                                                            .getCategoryid());
             }
         }
         return ticketRepo.save(updateTicket);
