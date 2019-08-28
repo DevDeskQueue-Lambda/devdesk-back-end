@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
         description = "Where the Categories are Stored")
 @Entity
 @Table(name = "categories")
-public class Category extends Auditable implements Serializable
+public class Category extends Auditable
 {
     @ApiModelProperty(name = "categoryid",
             value = "The Primary Key for the Categories",
@@ -29,12 +29,12 @@ public class Category extends Auditable implements Serializable
             example = "React")
     @Column(nullable = false,
             unique = true)
+    @NotNull(message = "The field 'name' cannot be null")
     private String name;
 
-    @OneToMany(mappedBy = "category",
-            cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("category")
-    private List<Ticket> ticket = new ArrayList<>();
+    private List<TicketCategories> ticketCategories = new ArrayList<>();
 
     public Category()
     {
@@ -55,16 +55,6 @@ public class Category extends Auditable implements Serializable
         this.categoryid = categoryid;
     }
 
-    public List<Ticket> getTicket()
-    {
-        return ticket;
-    }
-
-    public void setTicket(List<Ticket> ticket)
-    {
-        this.ticket = ticket;
-    }
-
     public String getName()
     {
         return name;
@@ -73,5 +63,15 @@ public class Category extends Auditable implements Serializable
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public List<TicketCategories> getTicketCategories()
+    {
+        return ticketCategories;
+    }
+
+    public void setTicketMappers(List<TicketCategories> ticketCategories)
+    {
+        this.ticketCategories = ticketCategories;
     }
 }

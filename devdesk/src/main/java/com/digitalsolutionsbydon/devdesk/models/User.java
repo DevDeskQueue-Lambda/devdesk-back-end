@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,36 +35,37 @@ public class User extends Auditable
     @Column(unique = true,
             nullable = false)
     @Size(min = 5,
-            max = 20)
+            max = 20, message="Must be between 5 and 20 characters long")
+    @NotNull(message = "The field 'username' must not be null")
     private String username;
 
     @ApiModelProperty(name = "password",
             value = "User's password",
             required = true,
             example = "password")
-    @Column(unique = true,
-            nullable = false)
+    @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotNull(message = "The field 'password' must not be null")
     private String password;
 
     @ApiModelProperty(name = "fname",
             value = "User's First Name",
             required = true,
             example = "Ryan")
-    @Column(unique = true,
-            nullable = false)
+    @Column(nullable = false)
     @Size(min = 2,
-            max = 20)
+            max = 20, message="Must be between 2 and 20 characters long")
+    @NotNull(message = "The field 'fname' must not be null")
     private String fname;
 
     @ApiModelProperty(name = "lname",
             value = "User's Last Name",
             required = true,
             example = "Hamblin")
-    @Column(unique = true,
-            nullable = false)
+    @Column(nullable = false)
     @Size(min = 2,
-            max = 20)
+            max = 20, message="Must be between 2 and 20 characters long")
+    @NotNull(message = "The field 'lname' must not be null")
     private String lname;
 
     @ApiModelProperty(name = "useremail",
@@ -72,19 +74,28 @@ public class User extends Auditable
             example = "rhamblin@gmail.com")
     @Column(unique = true,
             nullable = false)
-    @Email
+    @Email(message = "Invalid Email Address")
+    @NotNull(message = "The field 'useremail' must not be null")
     private String useremail;
 
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("user")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<UserRoles> userRoles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade=CascadeType.ALL)
-    @JsonIgnoreProperties("user")
-    private List<Ticket> tickets = new ArrayList<>();
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<Ticket> ticket = new ArrayList<>();
 
-    public User()
+    @OneToMany(mappedBy="assigneduser")
+    @JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
+    private List<Ticket> assigneduser = new ArrayList<>();
+
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    @JsonProperty(access= JsonProperty.Access.WRITE_ONLY)
+    private List<Comment> comment = new ArrayList<>();
+
+      public User()
     {
     }
 
@@ -182,14 +193,34 @@ public class User extends Auditable
         this.userRoles = userRoles;
     }
 
-    public List<Ticket> getTickets()
+    public List<Ticket> getTicket()
     {
-        return tickets;
+        return ticket;
     }
 
-    public void setTickets(List<Ticket> tickets)
+    public void setTicket(List<Ticket> ticket)
     {
-        this.tickets = tickets;
+        this.ticket = ticket;
+    }
+
+    public List<Ticket> getAssigneduser()
+    {
+        return assigneduser;
+    }
+
+    public void setAssigneduser(List<Ticket> assigneduser)
+    {
+        this.assigneduser = assigneduser;
+    }
+
+    public List<Comment> getComment()
+    {
+        return comment;
+    }
+
+    public void setComment(List<Comment> comment)
+    {
+        this.comment = comment;
     }
 
     public List<SimpleGrantedAuthority> getAuthority()

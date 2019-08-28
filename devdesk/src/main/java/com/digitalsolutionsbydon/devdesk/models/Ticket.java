@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,62 +18,72 @@ public class Ticket extends Auditable implements Serializable
     @ApiModelProperty(name="ticketid", value="Primary Key for Tickets", required = true, example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private long ticketid;
 
     @ApiModelProperty(name="title", value="Ticket Title", required = true, example = "HELP!")
     @Column(nullable = false)
+    @NotNull(message = "The field 'title' cannot be null")
     private String title;
 
     @ApiModelProperty(name="description", value="Description of Problem", required = true, example="My JAVA won't Compile")
     @Column(nullable=false)
+    @NotNull(message="The field 'description' cannot be null")
     private String description;
 
     @ApiModelProperty(name="tried", value="Methods Tried", required = true, example="Restarted Computer")
     @Column(nullable=false)
+    @NotNull(message="The field 'tried' cannot be null")
     private String tried;
 
-    @ApiModelProperty(name="Assigned ID", value="User ID of the assigned user", required = false, example="1")
-    private long assignedid;
-
     @ManyToOne
-    @JoinColumn(name = "userid")
+    @JoinColumn(name="userid")
     @JsonIgnoreProperties("ticket")
     private User user;
 
-    @ApiModelProperty(name="Status", value="Status of the Ticket", required = true)
+    @ManyToOne
+    @JoinColumn(name="assignedid", referencedColumnName = "userid")
+    @JsonIgnoreProperties("ticket")
+    private User assigneduser;
+
     @ManyToOne
     @JoinColumn(name="statusid")
     @JsonIgnoreProperties("ticket")
     private Status status;
 
-    @ApiModelProperty(name="Category", value="Category for Issue", required = true)
-    @ManyToOne
-    @JoinColumn(name="categoryid")
+    @OneToMany(mappedBy="ticket", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("ticket")
-    private Category category;
+    private List<TicketCategories> ticketCategories = new ArrayList<>();
+
+    @OneToMany(mappedBy="ticket", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("ticket")
+    private List<TicketComments> ticketComments = new ArrayList<>();
 
     public Ticket()
     {
     }
 
-    public Ticket(String title, String description, String tried, User user, Status status, Category category)
+    public Ticket(@NotNull(message = "The field 'title' cannot be null") String title, @NotNull(message = "The field 'description' cannot be null") String description, @NotNull(message = "The field 'tried' cannot be null") String tried, User user, Status status, List<TicketCategories> ticketCategories)
     {
         this.title = title;
         this.description = description;
         this.tried = tried;
         this.user = user;
         this.status = status;
-        this.category = category;
+        for (TicketCategories tc: ticketCategories)
+        {
+            tc.setTicket(this);
+        }
+        this.ticketCategories = ticketCategories;
     }
 
-    public long getId()
+    public long getTicketid()
     {
-        return id;
+        return ticketid;
     }
 
-    public void setId(long id)
+    public void setTicketid(long ticketid)
     {
-        this.id = id;
+        this.ticketid = ticketid;
     }
 
     public String getTitle()
@@ -105,16 +116,6 @@ public class Ticket extends Auditable implements Serializable
         this.tried = tried;
     }
 
-    public long getAssignedid()
-    {
-        return assignedid;
-    }
-
-    public void setAssignedid(long assignedid)
-    {
-        this.assignedid = assignedid;
-    }
-
     public User getUser()
     {
         return user;
@@ -123,6 +124,16 @@ public class Ticket extends Auditable implements Serializable
     public void setUser(User user)
     {
         this.user = user;
+    }
+
+    public User getAssigneduser()
+    {
+        return assigneduser;
+    }
+
+    public void setAssigneduser(User assigneduser)
+    {
+        this.assigneduser = assigneduser;
     }
 
     public Status getStatus()
@@ -135,13 +146,23 @@ public class Ticket extends Auditable implements Serializable
         this.status = status;
     }
 
-    public Category getCategory()
+    public List<TicketCategories> getTicketCategories()
     {
-        return category;
+        return ticketCategories;
     }
 
-    public void setCategory(Category category)
+    public void setTicketCategories(List<TicketCategories> ticketCategories)
     {
-        this.category = category;
+        this.ticketCategories = ticketCategories;
+    }
+
+    public List<TicketComments> getTicketComments()
+    {
+        return ticketComments;
+    }
+
+    public void setTicketComments(List<TicketComments> ticketComments)
+    {
+        this.ticketComments = ticketComments;
     }
 }

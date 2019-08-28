@@ -3,6 +3,7 @@ package com.digitalsolutionsbydon.devdesk.handlers;
 import com.digitalsolutionsbydon.devdesk.exceptions.BadRequestException;
 import com.digitalsolutionsbydon.devdesk.exceptions.NotAuthorizedException;
 import com.digitalsolutionsbydon.devdesk.exceptions.ResourceNotFoundException;
+import com.digitalsolutionsbydon.devdesk.exceptions.ValidationError;
 import com.digitalsolutionsbydon.devdesk.models.ErrorDetail;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -20,7 +23,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler
@@ -107,5 +112,36 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         errorDetail.setDeveloperMessage("Rest Handler Not Found (check for valid URI)");
 
         return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request)
+    {
+
+        ErrorDetail errorDetail = new ErrorDetail();
+        errorDetail.setTimestamp(new Date().getTime());
+        errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorDetail.setTitle("Success depends upon previous preparation, and without such preparation there is sure to be failure. --Confucius");
+        errorDetail.setDetail("Input validation failed, check errors Object.");
+        errorDetail.setDeveloperMessage(ex.getClass()
+                                          .getName());
+        List<FieldError> fieldErrors = ex.getBindingResult()
+                                         .getFieldErrors();
+        for (FieldError fe : fieldErrors)
+        {
+            List<ValidationError> validationErrorList = errorDetail.getErrors()
+                                                                   .get(fe.getField());
+            if (validationErrorList == null)
+            {
+                validationErrorList = new ArrayList<>();
+                errorDetail.getErrors()
+                           .put(fe.getField(), validationErrorList);
+            }
+            ValidationError validationError = new ValidationError();
+            validationError.setCode(fe.getCode());
+            validationError.setMessage(fe.getDefaultMessage());
+            validationErrorList.add(validationError);
+        }
+        return new ResponseEntity<>(errorDetail, null, HttpStatus.BAD_REQUEST);
     }
 }

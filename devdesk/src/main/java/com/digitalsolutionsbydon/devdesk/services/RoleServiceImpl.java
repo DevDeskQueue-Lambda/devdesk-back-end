@@ -52,28 +52,6 @@ public class RoleServiceImpl implements RoleService
         return list;
     }
 
-    @Override
-    public Role findRoleByRoleId(long id) throws ResourceNotFoundException
-    {
-        return roleRepo.findById(id)
-                       .orElseThrow(() -> new ResourceNotFoundException("The role with id:" + id + " was not found in the system."));
-    }
-
-    @Transactional
-    @Modifying
-    @Override
-    public void deleteRoleByRoleId(long id)
-    {
-        if (roleRepo.findById(id)
-                    .isPresent())
-        {
-            roleRepo.deleteById(id);
-        } else
-        {
-            throw new ResourceNotFoundException("The role with id:" + id + " was not found in the system.");
-        }
-    }
-
     @Transactional
     @Override
     public Role save(Role role)
