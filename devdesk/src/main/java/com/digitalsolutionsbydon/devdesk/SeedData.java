@@ -80,10 +80,12 @@ public class SeedData implements CommandLineRunner
         Category c2 = new Category("Node.JS");
         Category c3 = new Category("Java");
         Category c4 = new Category("JavaScript");
+        Category c5 = new Category("Other");
         c1 = categoryService.save(c1);
         c2 = categoryService.save(c2);
         c3 = categoryService.save(c3);
         c4 = categoryService.save(c4);
+        c5 = categoryService.save(c5);
 
 
         ArrayList<TicketCategories> tm1 = new ArrayList<>();
@@ -103,12 +105,12 @@ public class SeedData implements CommandLineRunner
         Ticket t3 = new Ticket("React", "My React App made 50000 calls to my Firebase DB in an hour", "Contacted Google", u4, s1, tm3);
         t3 = ticketRepo.save(t3);
 
-        Comment ct1 = new Comment("I'm out of ideas", u2);
-        Comment ct2 = new Comment("I'm out of ideas", u2);
-        Comment ct3 = new Comment("I'm out of ideas", u2);
-        Comment ct4 = new Comment("I'm out of ideas", u2);
-        Comment ct5 = new Comment("I'm out of ideas", u2);
-        Comment ct6 = new Comment("I'm out of ideas", u2);
+        Comment ct1 = new Comment("Just delightful, friend.", u2);
+        Comment ct2 = new Comment("Type, background, shot, job – splendid :)", u2);
+        Comment ct3 = new Comment("I want to learn this kind of gradient! Teach me.", u2);
+        Comment ct4 = new Comment("Such shot, many background, so admirable", u2);
+        Comment ct5 = new Comment("I love your shot.", u2);
+        Comment ct6 = new Comment("Let me take a nap... great shot, anyway.", u2);
 
         ct1 = commentRepo.save(ct1);
         ct2 = commentRepo.save(ct2);
