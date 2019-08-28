@@ -80,11 +80,11 @@ public class User extends Auditable
 
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("user")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<UserRoles> userRoles = new ArrayList<>();
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("user")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<Ticket> ticket = new ArrayList<>();
 
     @OneToMany(mappedBy="assigneduser")

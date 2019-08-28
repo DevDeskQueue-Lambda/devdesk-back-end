@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @ApiModel(value="Comments", description = "Comments for Admin / Staff")
 @Entity
 @Table(name="comments")
