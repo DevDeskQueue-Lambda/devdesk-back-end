@@ -18,7 +18,7 @@ public class TicketComments extends Auditable implements Serializable
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ticketid")
+    @JoinColumn(name="commentid")
     @JsonIgnoreProperties({"ticketComments", "hibernateLazyInitializer"})
     private Comment comment;
 

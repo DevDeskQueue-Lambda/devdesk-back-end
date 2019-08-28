@@ -62,7 +62,7 @@ public class Ticket extends Auditable implements Serializable
     {
     }
 
-    public Ticket(@NotNull(message = "The field 'title' cannot be null") String title, @NotNull(message = "The field 'description' cannot be null") String description, @NotNull(message = "The field 'tried' cannot be null") String tried, User user, Status status, List<TicketCategories> ticketCategories, List<TicketComments> ticketComments)
+    public Ticket(@NotNull(message = "The field 'title' cannot be null") String title, @NotNull(message = "The field 'description' cannot be null") String description, @NotNull(message = "The field 'tried' cannot be null") String tried, User user, Status status, List<TicketCategories> ticketCategories)
     {
         this.title = title;
         this.description = description;
@@ -74,11 +74,6 @@ public class Ticket extends Auditable implements Serializable
             tc.setTicket(this);
         }
         this.ticketCategories = ticketCategories;
-        for (TicketComments tcc: ticketComments)
-        {
-            tcc.setTicket(this);
-        }
-        this.ticketComments = ticketComments;
     }
 
     public long getTicketid()

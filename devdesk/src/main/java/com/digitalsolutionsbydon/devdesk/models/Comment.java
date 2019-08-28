@@ -30,6 +30,7 @@ public class Comment extends Auditable
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="userid")
+    @JsonIgnoreProperties({"comment", "hibernateLazyInitializer"})
     private User user;
 
     public Comment()
