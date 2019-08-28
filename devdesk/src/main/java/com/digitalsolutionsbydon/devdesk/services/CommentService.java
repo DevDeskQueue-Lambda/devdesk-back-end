@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CommentService
 {
-    Comment saveByTicketId(Comment comment, long userid, long ticketid);
+    Comment saveByTicketId(Comment comment, long ticketid);
 
     Comment update(Comment comment, long id);
 }
