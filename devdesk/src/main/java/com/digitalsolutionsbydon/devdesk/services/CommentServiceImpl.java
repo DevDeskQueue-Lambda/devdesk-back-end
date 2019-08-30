@@ -1,5 +1,7 @@
 package com.digitalsolutionsbydon.devdesk.services;
 
+import com.digitalsolutionsbydon.devdesk.exceptions.BadRequestException;
+import com.digitalsolutionsbydon.devdesk.exceptions.NotAuthorizedException;
 import com.digitalsolutionsbydon.devdesk.exceptions.ResourceNotFoundException;
 import com.digitalsolutionsbydon.devdesk.models.Comment;
 import com.digitalsolutionsbydon.devdesk.models.Ticket;
@@ -26,27 +28,16 @@ public class CommentServiceImpl implements CommentService
     CommentRepository commentRepo;
 
     @Override
-    public Comment saveByTicketId(Comment comment, long userid, long ticketid)
+    public Comment saveByTicketId(Comment comment, long ticketid)
     {
+        System.out.println("I was called");
         Ticket currentTicket = ticketRepo.findById(ticketid).orElseThrow(()-> new ResourceNotFoundException("Ticket with ID:" + ticketid + " was not found in the system"));
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Comment newComment = new Comment();
         newComment.setComment(comment.getComment());
-        if (authentication.getName() == null)
-        {
-            User currentUser = userRepo.findByUserid(userid);
-            newComment.setUser(currentUser);
-        } else
-        {
-            User currentUser = userRepo.findByUsername(authentication.getName());
-            newComment.setUser(currentUser);
-        }
-//        commentRepo.deleteTicketCommentsByTicketId(ticketid);
-//        for (TicketComments tc : currentTicket.getTicketComments())
-//        {
-//            commentRepo.insertIntoTicketComments(currentTicket.getTicketid(), tc.getComment().getCommentid());
-//        }
+        User currentUser = userRepo.findByUsername(authentication.getName());
+        newComment.setUser(currentUser);
         newComment = commentRepo.save(newComment);
         commentRepo.insertIntoTicketComments(currentTicket.getTicketid(), newComment.getCommentid());
         return newComment;
@@ -55,7 +46,23 @@ public class CommentServiceImpl implements CommentService
     @Override
     public Comment update(Comment comment, long id)
     {
-        return null;
+        Authentication authentication = SecurityContextHolder.getContext()
+                                                             .getAuthentication();
+        User currentUser = userRepo.findByUsername(authentication.getName());
+        Comment updateComment = commentRepo.findCommentByCommentid(id);
+        if (currentUser.getUserid() != updateComment.getUser()
+                                                    .getUserid())
+        {
+            throw new NotAuthorizedException("You may not edit a comment that does not belong to you");
+        }
+        if (comment.getComment() != null)
+        {
+            updateComment.setComment(comment.getComment());
+        } else
+        {
+            throw new BadRequestException("You must provide a comment in order to update");
+        }
+        return commentRepo.save(updateComment);
     }
 
 

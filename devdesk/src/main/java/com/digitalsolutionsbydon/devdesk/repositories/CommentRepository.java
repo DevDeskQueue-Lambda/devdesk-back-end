@@ -17,4 +17,6 @@ public interface CommentRepository extends CrudRepository<Comment, Long>
     @Modifying
     @Query(value = "INSERT INTO TicketComments(ticketid, commentid) values(:ticketid, :commentid)", nativeQuery = true)
     void insertIntoTicketComments(long ticketid, long commentid);
+
+    Comment findCommentByCommentid(long id);
 }
